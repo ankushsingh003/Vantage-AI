@@ -17,7 +17,7 @@ export default function ShapExplainer({ factors, method, summary }: ShapExplaine
   const maxPct = Math.max(...factors.map(f => f.importance_pct));
 
   return (
-    <div className="glass-card p-6 flex flex-col gap-4">
+    <div className="glass-card p-6 flex flex-col gap-4 h-full">
       <div>
         <h3 className="font-bold text-slate-200 text-lg">AI Explainability</h3>
         <p className="text-xs text-slate-500 font-mono">{method}</p>

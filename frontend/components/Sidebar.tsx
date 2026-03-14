@@ -15,11 +15,10 @@ import {
 import { motion } from "framer-motion";
 
 const navItems = [
-  { name: "Overview", icon: LayoutDashboard, href: "/dashboard/cosmetics" },
+  { name: "Platform Home", icon: LayoutDashboard, href: "/" },
+  { name: "Industry Hub", icon: Layers, href: "/" },
   { name: "Market Signals", icon: TrendingUp, href: "/signals" },
   { name: "Intelligence RAG", icon: Database, href: "/rag" },
-  { name: "Reports", icon: FileText, href: "/reports" },
-  { name: "Expert Chat", icon: MessageSquare, href: "/chat" },
 ];
 
 export default function Sidebar() {

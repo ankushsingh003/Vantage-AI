@@ -14,8 +14,17 @@ export default function PredictionChart({ data }: { data: any[] }) {
   ];
 
   return (
-    <div className="glass-card p-6 h-full min-h-[300px] flex flex-col">
-      <h3 className="text-lg font-medium text-slate-300 mb-6">LSTM Trajectory Forecast</h3>
+    <div className="glass-card p-6 h-full flex flex-col">
+      <div className="flex justify-between items-center mb-6">
+        <div>
+          <h3 className="text-xl font-bold">Ensemble Forecast</h3>
+          <p className="text-xs text-slate-500 font-mono">LSTM + Prophet Fusion</p>
+        </div>
+        <div className="flex gap-2">
+          <span className="px-2 py-0.5 bg-emerald-500/10 text-emerald-500 rounded border border-emerald-500/20 text-[10px] font-bold uppercase">LSTM</span>
+          <span className="px-2 py-0.5 bg-blue-500/10 text-blue-500 rounded border border-blue-500/20 text-[10px] font-bold uppercase">Prophet</span>
+        </div>
+      </div>
       <div className="flex-grow w-full">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData} margin={{ top: 5, right: 20, bottom: 5, left: 0 }}>

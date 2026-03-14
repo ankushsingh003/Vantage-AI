@@ -6,7 +6,7 @@ import FactorBreakdown from "@/components/FactorBreakdown";
 import PredictionChart from "@/components/PredictionChart";
 import LiveSignalFeed from "@/components/LiveSignalFeed";
 import ShapExplainer from "@/components/ShapExplainer";
-import { ArrowLeft, Loader2, FileText, MessageSquare, TrendingUp } from "lucide-react";
+import { ArrowLeft, Loader2, FileText, MessageSquare, TrendingUp, Layers } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
@@ -81,32 +81,34 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <div className="flex items-center gap-3 text-emerald-500 text-sm font-semibold uppercase tracking-wider mb-1">
-            <TrendingUp className="w-4 h-4" />
-            Live Market Intelligence
+            <Link href="/" className="hover:underline flex items-center gap-1">
+              <Layers className="w-3 h-3" /> Industries
+            </Link> 
+            <span>/</span>
+            <span className="flex items-center gap-1"><TrendingUp className="w-4 h-4" /> Live Market Intelligence</span>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight capitalize select-none">
+          <h1 className="text-4xl font-bold tracking-tight capitalize select-none flex items-center gap-3">
             {params.industry} <span className="text-slate-500 font-light">Analysis</span>
           </h1>
         </div>
         
         <div className="flex gap-3">
-          <button className="glass-card px-5 py-2.5 flex items-center gap-2 hover:bg-slate-800 transition-all font-medium text-sm">
-            <MessageSquare className="w-4 h-4 text-emerald-400" /> AI Insights
-          </button>
+          <Link href="/" className="glass-card px-5 py-2.5 flex items-center gap-2 hover:bg-slate-800 transition-all font-medium text-sm">
+             Switch Industry
+          </Link>
           <Link href="/report/vantage-final-001" className="bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-2.5 rounded-xl transition-all font-semibold text-sm flex items-center gap-2 shadow-lg shadow-emerald-500/20">
             <FileText className="w-4 h-4" /> Strategic Report
           </Link>
         </div>
       </header>
 
-      {/* Bento Grid Layout */}
-      <div className="bento-grid">
+      <div className="bento-grid !grid-rows-[repeat(4,minmax(200px,auto))]">
         
         {/* ML Verdict - Main KPI */}
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="col-span-12 lg:col-span-4 row-span-2 glass-card p-8 flex flex-col justify-center"
+          className="col-span-12 lg:col-span-4 row-span-2 h-full"
         >
           <GrowthGauge 
             score={data.ml_verdict.score} 
@@ -120,15 +122,8 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="col-span-12 lg:col-span-8 row-span-2 glass-card p-8"
+          className="col-span-12 lg:col-span-8 row-span-2 h-full"
         >
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-bold">Ensemble Forecast Trajectory</h3>
-            <div className="flex gap-2">
-              <span className="px-3 py-1 bg-emerald-500/10 text-emerald-500 rounded-full text-[10px] font-bold uppercase tracking-tighter border border-emerald-500/20">LSTM</span>
-              <span className="px-3 py-1 bg-blue-500/10 text-blue-500 rounded-full text-[10px] font-bold uppercase tracking-tighter border border-blue-500/20">Prophet</span>
-            </div>
-          </div>
           <PredictionChart data={[]} /> 
         </motion.div>
 
@@ -137,7 +132,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="col-span-12 md:col-span-6 lg:col-span-3 glass-card p-6"
+          className="col-span-12 md:col-span-6 lg:col-span-3 h-full"
         >
           <FactorBreakdown title="Micro Drivers" factors={data.market_data.micro} />
         </motion.div>
@@ -146,7 +141,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="col-span-12 md:col-span-6 lg:col-span-3 glass-card p-6"
+          className="col-span-12 md:col-span-6 lg:col-span-3 h-full"
         >
           <FactorBreakdown title="Macro Context" factors={data.market_data.macro} />
         </motion.div>
@@ -156,7 +151,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="col-span-12 lg:col-span-6 glass-card p-6"
+          className="col-span-12 lg:col-span-6 h-full"
         >
           <LiveSignalFeed industry={params.industry} company="Strategy Engine" />
         </motion.div>
@@ -166,7 +161,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="col-span-12 glass-card p-8"
+          className="col-span-12 h-full"
         >
           <ShapExplainer 
             method="SHAP (TreeExplainer) + LIME"

@@ -9,7 +9,7 @@ export default function GrowthGauge({ score, label, confidence }: { score: numbe
   };
 
   return (
-    <div className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden h-64">
+    <div className="glass-card p-6 flex flex-col items-center justify-center relative overflow-hidden h-full min-h-[320px]">
       <h3 className="text-lg font-medium text-slate-300 mb-6 w-full object-top absolute top-6 left-6">ML Prediction</h3>
       
       {/* Semi-Circle Target Gauge */}
