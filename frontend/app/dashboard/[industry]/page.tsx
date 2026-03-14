@@ -171,8 +171,5 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
         </motion.div>
       </div>
     </motion.div>
-iv>
-      </div>
-    </motion.div>
   );
 }

@@ -17,6 +17,11 @@ class SHAPExplainer:
         await asyncio.sleep(0.4)
 
         # Simulate SHAP feature importance values using industry as seed for variation
+        feature_keys = list(features.keys()) if features else [
+            "revenue_growth_yoy", "debt_equity_ratio", "operating_margin",
+            "gdp_growth", "inflation_rate", "sentiment_score", "competitor_delta"
+        ]
+
         import hashlib
         seed = int(hashlib.md5(ml_result.get("industry", "general").encode()).hexdigest(), 16) % 10**8
         random.seed(seed)
@@ -24,7 +29,7 @@ class SHAPExplainer:
         shap_values = {}
         total = 0.0
         for k in feature_keys[:8]:
-            v = round(random.uniform(-0.3, 0.5), 4)
+            v = random.uniform(-0.3, 0.5)
             shap_values[k] = v
             total += abs(v)
 
