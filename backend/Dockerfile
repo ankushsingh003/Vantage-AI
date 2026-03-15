@@ -26,8 +26,8 @@ WORKDIR /app
 COPY --from=builder /opt/venv /opt/venv
 ENV PATH="/opt/venv/bin:$PATH"
 
-# Copy the rest of the backend code
-COPY . .
+# Copy the rest of the backend code into a subfolder to maintain the 'backend' package
+COPY . backend/
 
 # Set environment variables
 ENV PYTHONDONTWRITEBYTECODE 1
