@@ -41,16 +41,22 @@ Gross Margin: {company_input.get('gross_margin', 'N/A')}%
 
 2. TASK INSTRUCTIONS
 
-Using the data above, produce a comprehensive report formatted in clear Markdown. It must include exactly these sections:
+Using the data above, produce a comprehensive consultancy report formatted in clear Markdown. 
+It MUST include exactly these top-level sections for the PDF generator to parse correctly:
 
-1. Executive Summary
-2. Current Market Position
-3. Growth/Saturation/Decline Analysis (Directly addressing the ML Model Verdict)
-4. Key Risk Factors
-5. Strategic Recommendations (Provide 3-5 highly actionable, specific recommendations)
-6. 12-Month Outlook (Based on the LSTM forecast and macroeconomic trends)
+# INDUSTRY GROWTH & MARKET INSIGHTS
+(Analyze the broader sectoral trends using the Macro/Micro data provided)
 
-Do not use conversational filler (e.g., "Here is the report"). Output ONLY the report text in Markdown.
+# COMPANY-SPECIFIC FINANCIAL ANALYSIS
+(Deep dive into the company's financials, margins, and its standing relative to the industry)
+
+# STRATEGIC CONSULTANCY VERDICT
+(Provide your expert strategic assessment based on the ML prediction and trajectory)
+
+# ACTIONABLE RECOMMENDATIONS
+(Provide 3-5 specific, high-impact recommendations to improve growth or mitigate risk)
+
+Do not use conversational filler. Output ONLY the report text in Markdown starting from the first heading.
 """
 
 prompt_builder = PromptBuilder()
