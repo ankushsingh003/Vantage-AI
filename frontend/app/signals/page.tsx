@@ -22,13 +22,14 @@ export default function MarketSignalsPage() {
 
   const industries = ["printing", "pharma", "cosmetics", "tech"];
 
-  useEffect(() => {
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+
     const fetchData = async () => {
       setLoading(true);
       try {
         const [compRes, sigRes] = await Promise.all([
-          fetch(`http://localhost:8000/api/market/competitors/${industry}`).then(res => res.json()),
-          fetch(`http://localhost:8000/api/market/signals/${industry}`).then(res => res.json())
+          fetch(`${BACKEND_URL}/api/market/competitors/${industry}`).then(res => res.json()),
+          fetch(`${BACKEND_URL}/api/market/signals/${industry}`).then(res => res.json())
         ]);
         setCompetitors(compRes.competitors);
         setSignals(sigRes);

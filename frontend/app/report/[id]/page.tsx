@@ -7,8 +7,8 @@ export default function ReportViewer({ params }: { params: { id: string } }) {
   // In a real app, this would fetch the PDF URL from the backend using the ID
   const handleDownload = () => {
     // In production, use an environment variable for the API URL
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-    window.location.href = `${apiUrl}/api/report/download/${params.id}`;
+    const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://localhost:8000";
+    window.location.href = `${BACKEND_URL}/api/report/download/${params.id}`;
   };
 
   return (
