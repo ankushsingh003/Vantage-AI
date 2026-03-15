@@ -8,24 +8,24 @@ from backend.services.llm_engine.gemini_client import gemini_client
 
 logger = logging.getLogger(__name__)
 
-# Real company lists for all 16 industry verticals
+# Real company lists for all 16 industry verticals with Ticker Symbols
 REAL_INDUSTRY_LEADERS = {
-    "printing":    ["Heidelberg Druckmaschinen", "HP Inc.", "Konica Minolta", "Ricoh", "Canon", "Xerox", "Epson", "Roland DG"],
-    "pharma":      ["Pfizer", "Roche", "Novartis", "Merck & Co.", "AbbVie", "AstraZeneca", "Johnson & Johnson", "Bristol Myers Squibb", "Eli Lilly", "Sanofi"],
-    "cosmetics":   ["L'Oréal", "Estée Lauder", "Procter & Gamble (Beauty)", "Unilever (Beauty)", "Shiseido", "Coty", "Beiersdorf", "LVMH Parfums", "Revlon", "Avon"],
-    "tech":        ["Apple", "Microsoft", "Alphabet (Google)", "Amazon", "NVIDIA", "Meta Platforms", "Samsung Electronics", "TSMC", "Intel", "Salesforce"],
-    "oil":         ["Saudi Aramco", "ExxonMobil", "Shell", "BP", "TotalEnergies", "Chevron", "ConocoPhillips", "Equinor", "Eni", "Petrobras"],
-    "coal":        ["Glencore", "BHP Group", "China Shenhua Energy", "Coal India Ltd.", "Arch Resources", "Peabody Energy", "Yanzhou Coal Mining", "CONSOL Energy", "Adaro Energy", "Exxaro Resources"],
-    "finance":     ["JPMorgan Chase", "Bank of America", "Industrial & Commercial Bank of China", "Wells Fargo", "Goldman Sachs", "Morgan Stanley", "HDFC Bank", "Citigroup", "HSBC Holdings", "Barclays"],
-    "retail":      ["Walmart", "Amazon (Retail)", "Costco Wholesale", "Kroger", "JD.com", "Alibaba (Retail)", "Target", "Carrefour", "Tesco", "Home Depot"],
-    "real_estate": ["Brookfield Asset Management", "Blackstone Real Estate", "CBRE Group", "Jones Lang LaSalle (JLL)", "Prologis", "Simon Property Group", "Equity Residential", "AvalonBay Communities", "Public Storage", "Welltower"],
-    "energy":      ["NextEra Energy", "Iberdrola", "Enel", "Orsted", "EDP Renewables", "Brookfield Renewable", "Vattenfall", "Vestas Wind Systems", "First Solar", "SunPower"],
-    "aviation":    ["American Airlines", "Delta Air Lines", "United Airlines", "Southwest Airlines", "Lufthansa Group", "Emirates", "Air France-KLM", "International Airlines Group", "Ryanair", "IndiGo"],
-    "logistics":   ["UPS", "FedEx", "DHL (Deutsche Post)", "Amazon Logistics", "XPO Logistics", "Maersk", "CEVA Logistics", "Kuehne+Nagel", "DSV Panalpina", "GXO Logistics"],
-    "agriculture": ["Archer-Daniels-Midland (ADM)", "Bunge Limited", "Cargill", "Louis Dreyfus", "Nutrien", "BASF (Agri)", "Syngenta", "Deere & Company", "Corteva Agriscience", "Tyson Foods"],
-    "media":       ["The Walt Disney Company", "Netflix", "Comcast (NBCUniversal)", "Warner Bros. Discovery", "Paramount Global", "Sony Group (Entertainment)", "Fox Corporation", "Bertelsmann", "Vivendi", "ITV"],
-    "healthcare":  ["UnitedHealth Group", "CVS Health", "Elevance Health", "Cigna", "HCA Healthcare", "McKesson", "Johnson & Johnson (MedTech)", "Fresenius", "Philips Healthcare", "Siemens Healthineers"],
-    "insurance":   ["Berkshire Hathaway", "UnitedHealth (Insurance)", "Ping An Insurance", "Allianz", "AXA Group", "China Life Insurance", "Zurich Insurance", "Chubb", "MetLife", "Prudential Financial"],
+    "printing":    [("Heidelberg Druckmaschinen", "HDD.DE"), ("HP Inc.", "HPQ"), ("Konica Minolta", "4902.T"), ("Ricoh", "7752.T"), ("Canon", "7751.T"), ("Xerox", "XRX"), ("Epson", "6724.T"), ("Roland DG", "6789.T")],
+    "pharma":      [("Pfizer", "PFE"), ("Roche", "ROG.SW"), ("Novartis", "NVS"), ("Merck & Co.", "MRK"), ("AbbVie", "ABBV"), ("AstraZeneca", "AZN"), ("Johnson & Johnson", "JNJ"), ("Bristol Myers Squibb", "BMY"), ("Eli Lilly", "LLY"), ("Sanofi", "SNY")],
+    "cosmetics":   [("L'Oréal", "OR.PA"), ("Estée Lauder", "EL"), ("Procter & Gamble", "PG"), ("Unilever", "UL"), ("Shiseido", "4911.T"), ("Coty", "COTY"), ("Beiersdorf", "BEI.DE"), ("LVMH", "MC.PA"), ("Revlon", "REVRQ"), ("Avon", "AVP")],
+    "tech":        [("Apple", "AAPL"), ("Microsoft", "MSFT"), ("Alphabet (Google)", "GOOGL"), ("Amazon", "AMZN"), ("NVIDIA", "NVDA"), ("Meta Platforms", "META"), ("Samsung Electronics", "005930.KS"), ("TSMC", "TSM"), ("Intel", "INTC"), ("Salesforce", "CRM")],
+    "oil":         [("Saudi Aramco", "2222.SR"), ("ExxonMobil", "XOM"), ("Shell", "SHEL"), ("BP", "BP"), ("TotalEnergies", "TTE"), ("Chevron", "CVX"), ("ConocoPhillips", "COP"), ("Equinor", "EQNR"), ("Eni", "ENI.MI"), ("Petrobras", "PBR")],
+    "coal":        [("Glencore", "GLEN.L"), ("BHP Group", "BHP"), ("China Shenhua", "1088.HK"), ("Coal India", "COALINDIA.NS"), ("Arch Resources", "ARCH"), ("Peabody Energy", "BTU"), ("Yanzhou Coal", "YZCHY"), ("CONSOL Energy", "CEIX"), ("Adaro Energy", "ADRO.JK"), ("Exxaro", "EXX.JO")],
+    "finance":     [("JPMorgan Chase", "JPM"), ("Bank of America", "BAC"), ("ICBC", "1398.HK"), ("Wells Fargo", "WFC"), ("Goldman Sachs", "GS"), ("Morgan Stanley", "MS"), ("HDFC Bank", "HDB"), ("Citigroup", "C"), ("HSBC Holdings", "HSBC"), ("Barclays", "BCS")],
+    "retail":      [("Walmart", "WMT"), ("Amazon (Retail)", "AMZN"), ("Costco Wholesale", "COST"), ("Kroger", "KR"), ("JD.com", "JD"), ("Alibaba", "BABA"), ("Target", "TGT"), ("Carrefour", "CA.PA"), ("Tesco", "TSCO.L"), ("Home Depot", "HD")],
+    "real_estate": [("Brookfield", "BN"), ("Blackstone", "BX"), ("CBRE Group", "CBRE"), ("JLL", "JLL"), ("Prologis", "PLD"), ("Simon Property", "SPG"), ("Equity Residential", "EQR"), ("AvalonBay", "AVB"), ("Public Storage", "PSA"), ("Welltower", "WELL")],
+    "energy":      [("NextEra Energy", "NEE"), ("Iberdrola", "IBE.MC"), ("Enel", "ENEL.MI"), ("Orsted", "ORSTED.CO"), ("EDP Renewables", "EDPR.LS"), ("Brookfield Renewable", "BEPC"), ("Vattenfall", "VATTN.ST"), ("Vestas", "VWS.CO"), ("First Solar", "FSLR"), ("SunPower", "SPWR")],
+    "aviation":    [("American Airlines", "AAL"), ("Delta Air Lines", "DAL"), ("United Airlines", "UAL"), ("Southwest Airlines", "LUV"), ("Lufthansa", "LHA.DE"), ("Emirates", "EMIRATES.UL"), ("Air France-KLM", "AF.PA"), ("IAG", "IAG.L"), ("Ryanair", "RYAAY"), ("IndiGo", "INDIGO.NS")],
+    "logistics":   [("UPS", "UPS"), ("FedEx", "FDX"), ("DHL", "DHL.DE"), ("Amazon Logistics", "AMZN"), ("XPO Logistics", "XPO"), ("Maersk", "MAERSK-B.CO"), ("CEVA Logistics", "CEVA.UL"), ("Kuehne+Nagel", "KNIN.SW"), ("DSV", "DSV.CO"), ("GXO Logistics", "GXO")],
+    "agriculture": [("ADM", "ADM"), ("Bunge", "BG"), ("Cargill", "CARG.UL"), ("Louis Dreyfus", "LDC.UL"), ("Nutrien", "NTR"), ("BASF", "BAS.DE"), ("Syngenta", "SYEN.UL"), ("Deere & Company", "DE"), ("Corteva", "CTVA"), ("Tyson Foods", "TSN")],
+    "media":       [("The Walt Disney Company", "DIS"), ("Netflix", "NFLX"), ("Comcast", "CMCSA"), ("Warner Bros. Discovery", "WBD"), ("Paramount Global", "PARA"), ("Sony Group", "SONY"), ("Fox Corporation", "FOXA"), ("Bertelsmann", "BTG.DE"), ("Vivendi", "VIV.PA"), ("ITV", "ITV.L")],
+    "healthcare":  [("UnitedHealth Group", "UNH"), ("CVS Health", "CVS"), ("Elevance Health", "ELV"), ("Cigna", "CI"), ("HCA Healthcare", "HCA"), ("McKesson", "MCK"), ("Johnson & Johnson", "JNJ"), ("Fresenius", "FRE.DE"), ("Philips Healthcare", "PHG"), ("Siemens Healthineers", "SHL.DE")],
+    "insurance":   [("Berkshire Hathaway", "BRK-B"), ("UnitedHealth (Insurance)", "UNH"), ("Ping An Insurance", "2318.HK"), ("Allianz", "ALV.DE"), ("AXA Group", "CS.PA"), ("China Life Insurance", "2628.HK"), ("Zurich Insurance", "ZURN.SW"), ("Chubb", "CB"), ("MetLife", "MET"), ("Prudential Financial", "PRU")],
 }
 
 
@@ -58,6 +58,7 @@ class CompetitorAnalyzer:
             "competitors": [
                 {{
                     "name": "Real Company Name",
+                    "ticker": "TICKER",
                     "market_share": 18.5,
                     "growth_yoy": 6.2,
                     "core_strength": "Brief 3-5 word strength",
@@ -117,7 +118,13 @@ class CompetitorAnalyzer:
 
         competitors = []
         total_share = 0.0
-        for i, name in enumerate(base_list):
+        for i, entry in enumerate(base_list):
+            if isinstance(entry, tuple):
+                name, ticker = entry
+            else:
+                name = entry
+                ticker = name.split()[0].upper()[:4]
+
             # Decreasing market share from leader to niche
             max_share = max(25.0 - i * 2.5, 3.0)
             share = round(random.uniform(max_share * 0.7, max_share), 1)
@@ -128,6 +135,7 @@ class CompetitorAnalyzer:
             growth = round(random.uniform(-1.5, 12.0), 1)
             competitors.append({
                 "name": name,
+                "ticker": ticker,
                 "market_share": share,
                 "growth_yoy": growth,
                 "core_strength": random.choice(strengths),
