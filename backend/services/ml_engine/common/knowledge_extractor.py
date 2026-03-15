@@ -64,32 +64,36 @@ class KnowledgeExtractor:
 
         prompt = f"""
         Role: Senior Financial Analyst & Market Intelligence Expert (Partner-level, Big Three consulting).
-        Task: Extract/Synthesize a detailed, realistic dataset for the '{industry}' industry specifically for '{quarter} {year}'.
+        Task: Extract/Synthesize a detailed, realistic dataset for the '{industry}' industry for '{quarter} {year}'.
 
-        CRITICAL INSTRUCTIONS:
-        - The data MUST reflect the specific seasonality and macro-economic conditions of {quarter}.
-        - For Q4: consider holiday spending, year-end budget cycles, and fiscal close effects.
-        - For Q1: consider new fiscal year allocations, inventory restocking.
-        - Ensure "quarterly_growth_yoy" values are realistic and differ between quarters.
+        CRITICAL RULES — NEVER BREAK THESE:
+        - Use ONLY REAL, NAMED companies (e.g., "Heidelberg Materials", "ExxonMobil", "JPMorgan Chase"). 
+        - DO NOT use placeholder names like "Market Peer B", "Niche Player D", "Global Leader A", or any similar generic names.
+        - Include 12 to 15 companies representing the full competitive landscape (from dominant leaders to mid-tier players).
+        - Each company MUST have a realistic "market_share_pct" (percentage of total industry revenue/market cap) that sums to roughly 100%.
+        - Financial figures must be realistic and in USD millions, based on publicly known data or plausible estimates.
         - Industry Lens: {industry_hint}
+        - The data MUST reflect {quarter} seasonality and macro-economic conditions.
 
-        Return a JSON object with:
+        Return a JSON object with exactly:
         1. "market_conditions": {{ "demand_index": float(0-1), "supply_index": float(0-1), "inflation_impact": float }}
-        2. "players": array of 4-5 real or representative companies with:
+        2. "players": array of 12-15 real companies, each with:
             {{
-                "name": string (use real company names if applicable),
-                "balance_sheet": {{ "total_assets": float(USD millions), "total_liabilities": float, "equity": float }},
-                "income_statement": {{ "revenue": float(USD millions), "net_income": float, "operating_margin": float }},
-                "quarterly_growth_yoy": float (e.g., 0.08 for 8% growth)
+                "name": string (REAL company name ONLY, e.g. "Heidelberg Materials AG"),
+                "ticker": string (stock ticker if publicly listed, else "Private"),
+                "market_share_pct": float (e.g., 18.5 for 18.5% market share),
+                "balance_sheet": {{ "total_assets": float, "total_liabilities": float, "equity": float }},
+                "income_statement": {{ "revenue": float, "net_income": float, "operating_margin": float }},
+                "quarterly_growth_yoy": float (e.g., 0.08 for 8% YoY growth)
             }}
         3. "industry_features": {{
-            "descriptive_kpi_1": float,
-            "descriptive_kpi_2": float,
-            "descriptive_kpi_3": float
+            "kpi_name_1": float,
+            "kpi_name_2": float,
+            "kpi_name_3": float
            }}
-           Use specific, human-readable KPI names relevant to the '{industry}' sector (e.g., "brent_crude_sensitivity" for oil).
+           Use human-readable KPI names specific to '{industry}' (e.g., "brent_crude_price_usd" for oil).
 
-        Output ONLY valid JSON, no markdown fences.
+        Output ONLY valid JSON. No markdown fences. No comments.
         """
 
         try:
