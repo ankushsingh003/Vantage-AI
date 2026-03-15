@@ -32,7 +32,10 @@ class KnowledgeExtractor:
             "income_statement": {{ "revenue": float, "net_income": float, "operating_margin": float }},
             "quarterly_growth_yoy": float
            }}
-        3. "industry_features": {{ "raw_material_cost_index": float, "regulatory_hurdle_score": float }}
+        3. "industry_features": {{ 
+            "descriptive_metric_name_1": float, 
+            "descriptive_metric_name_2": float 
+           }} (Use human-readable keys like "ink_availability" or "fpa_pipeline_health")
         
         Industry-specific focus:
         - If Printing: focus on Ink costs, paper shortage.
@@ -68,6 +71,14 @@ class KnowledgeExtractor:
         q_map = {"Q1": 0.95, "Q2": 1.05, "Q3": 1.02, "Q4": 1.0}
         factor = q_map.get(quarter, 1.0)
         
+        # Custom descriptive features for each industry fallback
+        industry_metrics = {
+            "printing": {"ink_cost_index": 0.8, "paper_supply_resilience": 0.4},
+            "pharma": {"fda_pipeline_health": 0.7, "rd_efficiency": 0.6},
+            "tech": {"chip_supply_stability": 0.5, "ai_adoption_rate": 0.9},
+            "cosmetics": {"brand_loyalty_index": 0.8, "raw_material_availability": 0.5}
+        }
+        
         return {
             "market_conditions": {
                 "demand_index": round(0.7 * factor, 2),
@@ -82,7 +93,7 @@ class KnowledgeExtractor:
                     "quarterly_growth_yoy": 0.05 * factor
                 }
             ],
-            "industry_features": {"feature_a": 0.8, "feature_b": 0.4}
+            "industry_features": industry_metrics.get(industry, {"market_volatility": 0.5, "digital_readiness": 0.6})
         }
 
 knowledge_extractor = KnowledgeExtractor()

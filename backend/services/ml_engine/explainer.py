@@ -26,13 +26,15 @@ class SHAPExplainer:
         prompt = f"""
         Role: ML Explainability Expert (SHAP).
         Context: The V2 Strategy Engine predicted a status of '{label}' for a company in the '{industry}' industry.
-        Task: Deduce which 5 features (from standard financial/market metrics) were likely the top predictors for this result.
+        Task: Deduce which 5 features (from provided industry metrics and standard financial data) were the top predictors for this result.
+        
+        CRITICAL: Use human-readable, descriptive names for features (e.g., "R&D Efficiency" instead of "rd_eff", "Market Demand" instead of "demand_idx").
         
         Return JSON with:
         - "method": "SHAP (Contextual Inference)"
-        - "base_value": float (prediction probability baseline)
+        - "base_value": float (prediction baseline)
         - "top_features": array of {{ "feature": string, "importance_pct": float(1-40), "raw_shap": float }}
-        - "summary": One sentence strategy insight.
+        - "summary": One sentence strategy insight explaining the top driver.
         
         Output ONLY valid JSON.
         """
