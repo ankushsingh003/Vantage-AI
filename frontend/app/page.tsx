@@ -114,29 +114,30 @@ export default function Home() {
             <p className="text-slate-500">Select an industry to run live API diagnostics.</p>
         </div>
 
-        {/* Grid */}
         <motion.div
           variants={container}
           initial="hidden"
           animate="show"
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4"
-        >        {industries.map((ind) => (
-          <motion.div key={ind.id} variants={item}>
-            <Link
-              href={`/dashboard/${ind.id}`}
-              className="group flex items-center gap-5 p-5 rounded-2xl bg-slate-900/40 border border-slate-800/50 hover:border-slate-700 hover:bg-slate-900/80 transition-all duration-300 hover:scale-[1.03] cursor-pointer"
-            >
-              <div className={`p-3 rounded-xl border flex-shrink-0 ${ind.bg}`}>
-                <span className={ind.color}>{ind.icon}</span>
-              </div>
-              <div className="min-w-0">
-                <h2 className="font-semibold text-slate-100 group-hover:text-white truncate text-sm">{ind.name}</h2>
-                <p className="text-xs text-slate-500 mt-0.5">AI-driven analysis</p>
-              </div>
-            </Link>
-          </motion.div>
-        ))}
-      </motion.div>
+        >
+          {industries.map((ind) => (
+            <motion.div key={ind.id} variants={item}>
+              <Link
+                href={`/dashboard/${ind.id}`}
+                className="group flex items-center gap-5 p-5 rounded-2xl bg-slate-900/40 border border-slate-800/50 hover:border-slate-700 hover:bg-slate-900/80 transition-all duration-300 hover:scale-[1.03] cursor-pointer"
+              >
+                <div className={`p-3 rounded-xl border flex-shrink-0 ${ind.bg}`}>
+                  <span className={ind.color}>{ind.icon}</span>
+                </div>
+                <div className="min-w-0">
+                  <h2 className="font-semibold text-slate-100 group-hover:text-white truncate text-sm">{ind.name}</h2>
+                  <p className="text-xs text-slate-500 mt-0.5">AI-driven analysis</p>
+                </div>
+              </Link>
+            </motion.div>
+          ))}
+        </motion.div>
+      </section>
 
       <p className="text-center text-slate-700 text-xs mt-16 font-mono uppercase tracking-widest">
         Powered by Gemini 1.5 Flash · 4-Model ML Ensemble · Live RAG Context
