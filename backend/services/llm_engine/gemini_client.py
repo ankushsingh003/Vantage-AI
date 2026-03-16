@@ -10,7 +10,9 @@ class GeminiClient:
     """Wrapper for the Google Gemini API to generate market intelligence."""
     
     def __init__(self):
-        dotenv.load_dotenv()
+        # Explicitly load from the backend directory so it works regardless of CWD
+        env_path = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
+        dotenv.load_dotenv(dotenv_path=env_path, override=True)
         # Allow running without API key for initial scaffolding/testing
         api_key = os.environ.get("GEMINI_API_KEY")
         

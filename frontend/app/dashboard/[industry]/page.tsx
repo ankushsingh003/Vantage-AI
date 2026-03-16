@@ -78,7 +78,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="p-8 max-w-[1600px] mx-auto space-y-8"
+      className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto space-y-6 lg:space-y-8"
     >
       {/* Top Header Information Belt */}
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
@@ -97,12 +97,12 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
         
       </header>
 
-      <div className="flex justify-between items-center bg-slate-900/50 p-1 rounded-xl border border-slate-800 w-fit">
+      <div className="flex items-center bg-slate-900/50 p-1 rounded-xl border border-slate-800 w-full sm:w-fit overflow-x-auto">
         {quarters.map((q) => (
           <button
             key={q}
             onClick={() => setSelectedQuarter(q)}
-            className={`px-6 py-2 rounded-lg text-sm font-semibold transition-all ${
+            className={`px-4 sm:px-6 py-2 rounded-lg text-sm font-semibold transition-all whitespace-nowrap ${
               selectedQuarter === q 
                 ? "bg-emerald-600 text-white shadow-lg" 
                 : "text-slate-400 hover:text-slate-200 hover:bg-slate-800"
@@ -119,7 +119,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
         <motion.div 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="col-span-12 lg:col-span-4 row-span-2 h-full"
+          className="col-span-1 sm:col-span-2 lg:col-span-4 lg:row-span-2 h-full"
         >
           <GrowthGauge 
             score={data.ml_verdict.score} 
@@ -133,7 +133,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.1 }}
-          className="col-span-12 lg:col-span-8 row-span-2 h-full"
+          className="col-span-1 sm:col-span-2 lg:col-span-8 lg:row-span-2 h-full"
         >
           <PredictionChart 
             data={data.ml_verdict.forecast_data || []} 
@@ -146,7 +146,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.2 }}
-          className="col-span-12 md:col-span-6 lg:col-span-3 h-full"
+          className="col-span-1 sm:col-span-1 lg:col-span-3 h-full"
         >
           <FactorBreakdown title="Sector Drivers" factors={data.ml_verdict.feature_contributions || []} />
         </motion.div>
@@ -155,7 +155,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="col-span-12 md:col-span-6 lg:col-span-3 h-full"
+          className="col-span-1 sm:col-span-1 lg:col-span-3 h-full"
         >
           <FactorBreakdown title="Sentiment Analysis" factors={[
             { name: "News Sentiment", val: data.ml_verdict.social_sentiment_score || 0.65, suffix: "/1" },
@@ -169,7 +169,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.4 }}
-          className="col-span-12 lg:col-span-6 h-full"
+          className="col-span-1 sm:col-span-2 lg:col-span-6 h-full"
         >
           <LiveSignalFeed industry={params.industry} company="Strategy Engine" />
         </motion.div>
@@ -179,7 +179,7 @@ export default function Dashboard({ params }: { params: { industry: string } }) 
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="col-span-12 h-full"
+          className="col-span-1 sm:col-span-2 lg:col-span-12 h-full"
         >
           <ShapExplainer 
             method={data.explainability.shap.method}

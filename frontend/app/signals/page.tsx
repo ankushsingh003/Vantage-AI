@@ -49,7 +49,7 @@ export default function MarketSignalsPage() {
   }, [industry]);
 
   return (
-    <div className="p-8 max-w-[1600px] mx-auto space-y-8 min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto space-y-6 lg:space-y-8 min-h-screen">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <div className="flex items-center gap-3 text-emerald-500 text-sm font-semibold uppercase tracking-wider mb-1">
@@ -60,20 +60,22 @@ export default function MarketSignalsPage() {
           </h1>
         </div>
 
-        <div className="flex gap-2 bg-slate-900/50 p-1.5 rounded-xl border border-slate-800 backdrop-blur-md">
-          {industries.map((ind) => (
-            <button
-              key={ind}
-              onClick={() => setIndustry(ind)}
-              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                industry === ind 
-                ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" 
-                : "text-slate-400 hover:text-white hover:bg-slate-800"
-              }`}
-            >
-              {ind.charAt(0).toUpperCase() + ind.slice(1)}
-            </button>
-          ))}
+        <div className="w-full overflow-x-auto rounded-xl border border-slate-800 bg-slate-900/50 backdrop-blur-md">
+          <div className="flex gap-1.5 p-1.5 min-w-max">
+            {industries.map((ind) => (
+              <button
+                key={ind}
+                onClick={() => setIndustry(ind)}
+                className={`px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                  industry === ind 
+                  ? "bg-emerald-600 text-white shadow-lg shadow-emerald-500/20" 
+                  : "text-slate-400 hover:text-white hover:bg-slate-800"
+                }`}
+              >
+                {ind.charAt(0).toUpperCase() + ind.slice(1)}
+              </button>
+            ))}
+          </div>
         </div>
       </header>
 
@@ -96,10 +98,10 @@ export default function MarketSignalsPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="grid grid-cols-12 gap-6"
+            className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6"
           >
             {/* Competitor Ranking */}
-            <div className="col-span-12 lg:col-span-7 glass-card p-6 flex flex-col h-full">
+            <div className="col-span-1 lg:col-span-7 glass-card p-4 sm:p-6 flex flex-col h-full">
               <div className="flex justify-between items-center mb-6">
                 <div>
                   <h3 className="text-xl font-bold flex items-center gap-2">
@@ -153,7 +155,7 @@ export default function MarketSignalsPage() {
             </div>
 
             {/* Success factors */}
-            <div className="col-span-12 lg:col-span-5 space-y-6">
+            <div className="col-span-1 lg:col-span-5 space-y-4 lg:space-y-6">
               <div className="glass-card p-6">
                 <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                   <Zap className="w-5 h-5 text-amber-400" /> Success Factor Map
