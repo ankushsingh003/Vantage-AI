@@ -54,10 +54,10 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white dark:bg-[#020617] text-[#143D2C] dark:text-white overflow-hidden pb-16 pt-32">
+    <main className="min-h-screen bg-white dark:bg-[#020617] text-[#143D2C] dark:text-white overflow-hidden pb-16 pt-20">
       
       {/* BCG Style Center-Aligned Hero Section */}
-      <section className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center text-center py-12 lg:py-24 gap-12">
+      <section className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center text-center py-8 lg:py-16 gap-10">
         <div className="relative z-10 flex flex-col items-center gap-8 w-full max-w-4xl">
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
