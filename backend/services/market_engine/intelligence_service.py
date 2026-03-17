@@ -2,9 +2,11 @@ from groq import Groq
 import httpx
 import os
 import asyncio
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 import logging
 import json
+
+import time
 
 logger = logging.getLogger(__name__)
 
@@ -16,6 +18,11 @@ class IntelligenceService:
         self.dt_key = os.getenv("DIGITAL_TRANSFORM_KEY")
         self.groq_key = os.getenv("GROq_API_KEY")
         self.client = Groq(api_key=self.groq_key)
+        
+        # Caching Layer
+        self._cache: Optional[Dict[str, Any]] = None
+        self._cache_time: float = 0.0
+        self._cache_ttl = 300  # 5 minutes
 
     async def generate_inference(self, pillar: str, data: str) -> Dict[str, Any]:
         """ Uses GROQ to generate a structured, multi-dimensional strategic brief """
@@ -45,11 +52,17 @@ class IntelligenceService:
                 "mechanics": ["Real-time data aggregation via API triggers.", "Automated signal detection using variance thresholds."]
             }
 
+    async def fetch_pillar_with_inference(self, pillar_name: str, fetch_func) -> Dict[str, Any]:
+        """ Fetches data and immediately starts inference in parallel """
+        data = await fetch_func()
+        inference = await self.generate_inference(pillar_name, data["short"])
+        return {**data, "inference": inference}
+
     async def fetch_financial_advisory(self) -> Dict[str, Any]:
         """ Fetches price transparency/affiliation data from CMS """
         try:
             url = f"https://data.cms.gov/provider-data/api/1/datastore/query/{self.cms_id}/0?limit=5"
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=3.0) as client:
                 resp = await client.get(url)
                 if resp.status_code == 200:
                     results = resp.json().get("results", [])
@@ -59,17 +72,17 @@ class IntelligenceService:
                     return {
                         "short": signal,
                         "raw": results,
-                        "trends": [45, 52, 49, 60, 58, 65, 72] # Mocked trend based on fetch
+                        "trends": [45, 52, 49, 60, 58, 65, 72]
                     }
         except Exception as e:
-            logger.error(f"CMS Fetch Error: {e}")
+            logger.warning(f"CMS Fetch Timeout/Error (Failing to default): {e}")
         return {"short": "Financial Advisory: Market-wide capital reallocation detected.", "raw": [], "trends": [40, 45, 42, 50, 48, 55, 60]}
 
     async def fetch_regulatory_compliance(self) -> Dict[str, Any]:
         """ Fetches adverse events from openFDA """
         try:
             url = f"https://api.fda.gov/drug/event.json?api_key={self.fda_key}&limit=5"
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=3.0) as client:
                 resp = await client.get(url)
                 if resp.status_code == 200:
                     results = resp.json().get("results", [])
@@ -82,14 +95,14 @@ class IntelligenceService:
                         "trends": [12, 18, 15, 22, 19, 25, 30]
                     }
         except Exception as e:
-            logger.error(f"FDA Fetch Error: {e}")
+            logger.warning(f"FDA Fetch Timeout/Error (Failing to default): {e}")
         return {"short": "Regulatory Compliance: Increased scrutiny on device recall protocols.", "raw": [], "trends": [10, 12, 11, 15, 14, 18, 20]}
 
     async def fetch_digital_transformation(self) -> Dict[str, Any]:
         """ Fetches live FHIR data """
         try:
             url = "http://hapi.fhir.org/baseR4/Observation?_count=5&_sort=-_lastUpdated"
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=3.0) as client:
                 resp = await client.get(url)
                 if resp.status_code == 200:
                     entries = resp.json().get("entry", [])
@@ -102,14 +115,14 @@ class IntelligenceService:
                         "trends": [80, 85, 82, 90, 88, 95, 98]
                     }
         except Exception as e:
-            logger.error(f"FHIR Fetch Error: {e}")
+            logger.warning(f"FHIR Fetch Timeout/Error (Failing to default): {e}")
         return {"short": "Digital Transformation: Cloud-native EHR migration patterns show 15% efficiency gain.", "raw": [], "trends": [70, 75, 72, 80, 78, 85, 90]}
 
     async def fetch_strategic_growth(self) -> Dict[str, Any]:
         """ Fetches stock/market data via FMP """
         try:
             url = f"https://financialmodelingprep.com/api/v3/quote/CVS?apikey={self.fmp_key}"
-            async with httpx.AsyncClient(timeout=10.0) as client:
+            async with httpx.AsyncClient(timeout=3.0) as client:
                 resp = await client.get(url)
                 if resp.status_code == 200:
                     results = resp.json()
@@ -122,13 +135,13 @@ class IntelligenceService:
                         "trends": [120, 125, 122, 130, 128, 135, 140]
                     }
         except Exception as e:
-            logger.error(f"FMP Fetch Error: {e}")
+            logger.warning(f"FMP Fetch Timeout/Error (Failing to default): {e}")
         return {"short": "Strategic Growth: Consolidation phase starting. High-value acquisitions projected.", "raw": [], "trends": [100, 105, 102, 110, 108, 115, 120]}
 
-    async def generate_master_inference(self, all_data: Dict[str, Any]) -> str:
+    async def generate_master_inference(self, all_data_shorts: Dict[str, str]) -> str:
         """ Generates a global, two-line high-impact strategy synthesis """
         try:
-            context = json.dumps({k: v.get("short") for k, v in all_data.items()}, indent=2)
+            context = json.dumps(all_data_shorts, indent=2)
             prompt = f"""
             System: You are the Lead Strategy Consultant.
             Context: {context}
@@ -145,62 +158,59 @@ class IntelligenceService:
             return chat_completion.choices[0].message.content.strip()
         except Exception as e:
             logger.error(f"Master Inference Error: {e}")
-            return "Holistic Strategic Outlook: The convergence of real-time clinical data streams and AI-driven operational optimization represents the most significant margin expansion opportunity in this cycle. By bridging the gap between regulatory compliance and digital transformation, the enterprise can de-risk its capital allocation while accelerating its acquisition and consolidation timeline. This integrated approach ensures long-term market leadership through technical agility and data-driven decision making."
+            return "Holistic Strategic Outlook: The convergence of real-time clinical data streams and AI-driven operational optimization represents the most significant margin expansion opportunity in this cycle.\nBy bridging the gap between regulatory compliance and digital transformation, the enterprise can de-risk its capital allocation while accelerating its acquisition and consolidation timeline."
 
     async def get_full_report(self) -> Dict[str, Any]:
+        # Check Cache
+        current_time = time.time()
+        if self._cache is not None and (current_time - self._cache_time < self._cache_ttl):
+            logger.info("Serving Intelligence Report from Cache")
+            return self._cache
+
+        # Aggressively parallelized fetch + inference pipeline
         tasks = [
-            self.fetch_financial_advisory(),
-            self.fetch_regulatory_compliance(),
-            self.fetch_digital_transformation(),
-            self.fetch_strategic_growth()
+            self.fetch_pillar_with_inference("Financial", self.fetch_financial_advisory),
+            self.fetch_pillar_with_inference("Regulatory", self.fetch_regulatory_compliance),
+            self.fetch_pillar_with_inference("Digital", self.fetch_digital_transformation),
+            self.fetch_pillar_with_inference("Growth", self.fetch_strategic_growth)
         ]
-        # results: List[Dict[str, Any]]
-        results = await asyncio.gather(*tasks) # type: ignore
         
-        # Build the initial data set
-        data_set = {
+        results = await asyncio.gather(*tasks)
+        
+        # Extract metadata for master inference
+        shorts_for_master = {
+            "financial": results[0]["short"],
+            "regulatory": results[1]["short"],
+            "digital": results[2]["short"],
+            "growth": results[3]["short"],
+            "operational": "Operational Flux: Optimizing labor-to-output ratios by 12% via AI-orchestrated scheduling."
+        }
+        
+        # Final Master Inference run
+        master_inf = await self.generate_master_inference(shorts_for_master)
+
+        final_report = {
             "financial": results[0],
             "regulatory": results[1],
             "digital": results[2],
             "growth": results[3],
             "operational": {
-                "short": "Operational Flux: Optimizing labor-to-output ratios by 12% via AI-orchestrated scheduling.",
-                "trends": [30, 32, 35, 38, 42, 45, 48]
-            }
-        }
-
-        # Generate individual inferences and the Master inference
-        inference_tasks = [
-            self.generate_inference("Financial", data_set["financial"]["short"]),
-            self.generate_inference("Regulatory", data_set["regulatory"]["short"]),
-            self.generate_inference("Digital", data_set["digital"]["short"]),
-            self.generate_inference("Growth", data_set["growth"]["short"]),
-            self.generate_master_inference(data_set)
-        ]
-        # inferences: List[Union[Dict[str, Any], str]]
-        inferences = await asyncio.gather(*inference_tasks)
-        
-        # Explicit type cast or type ignore for complex gather results
-        inf_fin = inferences[0]
-        inf_reg = inferences[1]
-        inf_dig = inferences[2]
-        inf_gro = inferences[3]
-        inf_mas = inferences[4]
-
-        return {
-            "financial": {**data_set["financial"], "inference": inf_fin},
-            "regulatory": {**data_set["regulatory"], "inference": inf_reg},
-            "digital": {**data_set["digital"], "inference": inf_dig},
-            "growth": {**data_set["growth"], "inference": inf_gro},
-            "operational": {
-                **data_set["operational"], 
+                "short": shorts_for_master["operational"],
+                "trends": [30, 32, 35, 38, 42, 45, 48],
                 "inference": {
                     "key_points": ["Labor-to-output ratio optimization.", "Predictive scheduling integration."],
                     "action_plan": ["Deploy AI-scheduling pilots.", "Benchmark output velocity."],
                     "mechanics": ["Algorithmic shift management.", "Real-time performance telemetry."]
                 }
             },
-            "master_inference": inf_mas
+            "master_inference": master_inf
         }
+        
+        # Update Cache
+        self._cache = final_report
+        self._cache_time = current_time
+        return final_report
+
+intelligence_service = IntelligenceService()
 
 intelligence_service = IntelligenceService()
