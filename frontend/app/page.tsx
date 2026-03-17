@@ -304,8 +304,11 @@ export default function Home() {
             <p className="text-[#143D2C] dark:text-white font-bold text-sm max-w-2xl opacity-60">
               Powered by Gemini 1.5 Flash Enterprise · 4-Model ML Ensemble · Proprietary RAG Vector Engine
             </p>
-         </div>
-      </footer>
+            <p className="text-emerald-600/50 dark:text-emerald-500/40 text-[9px] font-black uppercase tracking-[0.3em] mt-2">
+              engineered by ankush kumar singh
+            </p>
+          </div>
+        </footer>
     </main>
   );
 }
