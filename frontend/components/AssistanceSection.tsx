@@ -116,9 +116,12 @@ export default function AssistanceSection() {
               </div>
 
               {/* Developer Attribution */}
-              <div className="mt-12 pt-8 border-t border-[#143D2C]/5 flex justify-between items-center opacity-40 font-mono text-[10px] text-[#143D2C] tracking-tight">
-                <span className="uppercase font-bold">Protocol // Assistance_v4</span>
-                <span className="italic">engineered by ankush kumar singh</span>
+              <div className="mt-10 pt-6 border-t border-[#143D2C]/10 flex justify-between items-center opacity-70 font-mono text-[10px] text-[#143D2C] tracking-tight">
+                <div className="flex items-center gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                  <span className="uppercase font-bold">Protocol // Assistance_v4</span>
+                </div>
+                <span className="font-bold italic">engineered by ankush kumar singh</span>
               </div>
             </motion.div>
           </div>
