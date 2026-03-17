@@ -23,6 +23,7 @@ import {
   Layers,
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
+import AssistanceSection from "../components/AssistanceSection";
 
 export default function Home() {
   const industries = [
@@ -216,6 +217,10 @@ export default function Home() {
           </div>
         </motion.div>
       </section>
+
+      </section>
+
+      <AssistanceSection />
 
       {/* Select an Industry Section */}
       <section id="industries" className="bg-[#FBF9F4] dark:bg-[#0a0f1e] py-20 mt-4">
