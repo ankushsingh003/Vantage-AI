@@ -114,8 +114,6 @@ export default function AssistanceSection() {
                   </AnimatePresence>
                 </div>
               </div>
-
-              </div>
             </motion.div>
           </div>
 
