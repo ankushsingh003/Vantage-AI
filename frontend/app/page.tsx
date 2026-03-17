@@ -93,12 +93,15 @@ export default function Home() {
              transition={{ delay: 0.3 }}
              className="flex flex-wrap gap-4"
           >
-            <button className="group flex items-center gap-4 bg-[#A1F28B] text-[#143D2C] px-8 py-4 rounded-full font-black uppercase tracking-widest text-sm transition-all hover:scale-105 hover:shadow-2xl">
+            <Link 
+              href="#industries"
+              className="group flex items-center gap-4 bg-[#A1F28B] text-[#143D2C] px-8 py-4 rounded-full font-black uppercase tracking-widest text-sm transition-all hover:scale-105 hover:shadow-2xl"
+            >
               Explore Our Expertise
               <div className="w-8 h-8 bg-[#143D2C] text-[#A1F28B] rounded-full flex items-center justify-center transition-transform group-hover:translate-x-1">
                 <TrendingUp className="w-4 h-4" />
               </div>
-            </button>
+            </Link>
           </motion.div>
         </div>
 
@@ -200,7 +203,7 @@ export default function Home() {
       </section>
 
       {/* Select an Industry Section */}
-      <section className="bg-[#FBF9F4] dark:bg-[#0a0f1e] py-32 mt-12">
+      <section id="industries" className="bg-[#FBF9F4] dark:bg-[#0a0f1e] py-32 mt-12">
         <div className="max-w-7xl mx-auto px-6 lg:px-8">
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-20">
               <div className="max-w-2xl">
