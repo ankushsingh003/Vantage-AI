@@ -104,18 +104,18 @@ export default function RAGPage() {
       <aside className="w-80 border-r border-slate-800/50 bg-slate-950/50 backdrop-blur-3xl p-6 flex flex-col gap-8">
         <div>
           <div className="flex items-center gap-2 mb-6">
-            <div className="h-8 w-8 bg-emerald-500/20 rounded-lg flex items-center justify-center border border-emerald-500/30">
-              <Database className="text-emerald-400 w-4 h-4" />
+            <div className="h-10 w-10 bg-emerald-500/20 rounded-lg flex items-center justify-center border border-emerald-500/30">
+              <Database className="text-emerald-400 w-5 h-5" />
             </div>
-            <h2 className="text-sm font-bold uppercase tracking-widest text-slate-400">Knowledge RAG</h2>
+            <h2 className="text-base font-bold uppercase tracking-widest text-slate-400">Knowledge RAG</h2>
           </div>
           
           <div className="space-y-4">
             <div className="p-4 rounded-2xl bg-slate-900/50 border border-slate-800/50">
-              <h3 className="text-xs font-semibold text-emerald-400 mb-2 flex items-center gap-2">
-                <Globe className="w-3 h-3" /> Active Context
+              <h3 className="text-sm font-semibold text-emerald-400 mb-2 flex items-center gap-2">
+                <Globe className="w-4 h-4" /> Active Context
               </h3>
-              <p className="text-xs text-slate-400 leading-relaxed">
+              <p className="text-sm text-slate-400 leading-relaxed">
                 Currently optimized for Global Market Analysis, SEC Filings, and Real-time Industry News.
               </p>
             </div>
@@ -126,18 +126,18 @@ export default function RAGPage() {
           <h3 className="text-[10px] font-bold uppercase tracking-widest text-slate-500 mb-4 px-2">Knowledge Sources</h3>
           <div className="space-y-2">
             {["Market Research Database", "SEC 10-K Filings", "Industry News Wire", "Internal Strategy Docs"].map(source => (
-              <div key={source} className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-slate-900/50 transition-colors group">
-                <ShieldCheck className="w-3.5 h-3.5 text-slate-600 group-hover:text-emerald-400" />
-                <span className="text-xs text-slate-400 group-hover:text-slate-200">{source}</span>
+              <div key={source} className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-slate-900/50 transition-colors group">
+                <ShieldCheck className="w-4 h-4 text-slate-600 group-hover:text-emerald-400" />
+                <span className="text-sm text-slate-400 group-hover:text-slate-200">{source}</span>
               </div>
             ))}
           </div>
         </div>
 
         <div className="mt-auto">
-          <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 p-4 rounded-2xl border border-emerald-500/20">
-            <p className="text-[10px] text-emerald-400/80 uppercase font-bold tracking-tighter mb-2">Pro Tip</p>
-            <p className="text-[11px] text-slate-400 leading-relaxed italic">
+          <div className="bg-gradient-to-br from-emerald-500/10 to-blue-500/10 p-5 rounded-2xl border border-emerald-500/20">
+            <p className="text-xs text-emerald-400/80 uppercase font-bold tracking-tighter mb-2">Pro Tip</p>
+            <p className="text-sm text-slate-400 leading-relaxed italic">
               "Ask about specific quarters for deeper seasonal intelligence."
             </p>
           </div>
@@ -154,10 +154,10 @@ export default function RAGPage() {
           {messages.length === 0 ? (
             <div className="h-full flex flex-col items-center justify-center max-w-2xl mx-auto text-center">
               <div className="h-20 w-20 bg-emerald-500/10 rounded-3xl flex items-center justify-center border border-emerald-500/20 mb-8 animate-pulse">
-                <Sparkles className="text-emerald-400 w-10 h-10" />
+                <Sparkles className="text-emerald-400 w-12 h-12" />
               </div>
-              <h1 className="text-4xl font-bold tracking-tight mb-4">Deep Market Intelligence</h1>
-              <p className="text-slate-400 leading-relaxed mb-12">
+              <h1 className="text-5xl font-bold tracking-tight mb-6">Deep Market Intelligence</h1>
+              <p className="text-xl text-slate-400 leading-relaxed mb-12">
                 Search across thousands of industry reports, financial statements, and real-time signals. 
                 Our AI-driven RAG engine synthesizes complex data into actionable strategy.
               </p>
@@ -167,10 +167,10 @@ export default function RAGPage() {
                   <button
                     key={q}
                     onClick={() => handleQuery(undefined, q)}
-                    className="p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-500/50 hover:bg-white/10 transition-all text-left group"
+                    className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-emerald-500/50 hover:bg-white/10 transition-all text-left group"
                   >
-                    <p className="text-sm font-medium text-slate-300 group-hover:text-white mb-2">{q}</p>
-                    <ArrowRight className="w-3.5 h-3.5 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
+                    <p className="text-base font-medium text-slate-300 group-hover:text-white mb-2">{q}</p>
+                    <ArrowRight className="w-4 h-4 text-slate-500 group-hover:text-emerald-400 group-hover:translate-x-1 transition-all" />
                   </button>
                 ))}
               </div>
@@ -194,7 +194,7 @@ export default function RAGPage() {
                     
                     <div className={`flex flex-col gap-2 max-w-[85%] ${ms.type === 'bot' ? '' : 'items-end'}`}>
                       <div className={`
-                        p-6 rounded-3xl leading-relaxed border prose prose-invert max-w-none
+                        p-6 rounded-3xl leading-relaxed border prose prose-invert max-w-none text-base
                         ${ms.type === 'bot' 
                           ? 'bg-slate-900/50 border-slate-800/80 text-slate-200' 
                           : 'bg-emerald-500 text-white border-emerald-600 font-medium'
@@ -259,7 +259,7 @@ export default function RAGPage() {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Ask about industry trends, technical risks, or financial forecasts..."
-                className="flex-1 bg-transparent border-none outline-none text-sm placeholder:text-slate-600 py-3"
+                className="flex-1 bg-transparent border-none outline-none text-base placeholder:text-slate-600 py-3"
               />
               <button 
                 type="submit"
