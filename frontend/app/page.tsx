@@ -31,7 +31,7 @@ export default function Home() {
     { id: "tech",         name: "Technology & IT",         icon: <Cpu strokeWidth={2.5} className="w-8 h-8" />,              color: "text-[#143D2C] group-hover:text-white" },
     { id: "printing",     name: "Commercial Printing",     icon: <Printer strokeWidth={2.5} className="w-8 h-8" />,          color: "text-[#143D2C] group-hover:text-white" },
     { id: "oil",          name: "Oil & Gas",               icon: <Fuel strokeWidth={2.5} className="w-8 h-8" />,             color: "text-[#143D2C] group-hover:text-white" },
-    { id: "coal",         name: "Coal & Mining",           icon: <Factory strokeWidth={2.5} className="w-8 h-8" />,          color: "text-[#143D2C] group-hover:text-white" },
+    { id: "coal",         name: "Coal & Mining",           icon: <Factory strokeWidth={2.5} className="w-8 h-8" />,          color: "text-[#143D2C] group-hover:text-white", image: "/images/industries/mining_operation.png" },
     { id: "finance",      name: "Finance & Banking",       icon: <Landmark strokeWidth={2.5} className="w-8 h-8" />,         color: "text-[#143D2C] group-hover:text-white", image: "/images/industries/banking_collage.png" },
     { id: "retail",       name: "Retail & E-commerce",     icon: <ShoppingCart strokeWidth={2.5} className="w-8 h-8" />,     color: "text-[#143D2C] group-hover:text-white", image: "/images/industries/retail_layout.png" },
     { id: "real_estate",  name: "Real Estate",             icon: <Building2 strokeWidth={2.5} className="w-8 h-8" />,        color: "text-[#143D2C] group-hover:text-white" },
