@@ -184,8 +184,8 @@ export default function Home() {
             </div>
 
             {/* Right: Strategy Metrics Card */}
-            <div className="flex flex-col gap-4 order-3">
-               <div className="bg-white/5 backdrop-blur-2xl rounded-[24px] p-5 border border-white/10 flex flex-col gap-3 shadow-2xl items-start text-left">
+            <div className="flex flex-col gap-4 order-3 items-end">
+               <div className="max-w-[240px] w-full bg-white/5 backdrop-blur-2xl rounded-[24px] p-5 border border-white/10 flex flex-col gap-3 shadow-2xl items-start text-left">
                   <div className="flex flex-col gap-1 w-full">
                      <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border-b border-white/5 pb-1">Strategy Accuracy:</span>
                      <div className="flex items-baseline gap-2 mt-1">
