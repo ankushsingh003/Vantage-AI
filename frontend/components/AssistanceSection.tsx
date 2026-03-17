@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronDown, ChevronUp } from 'lucide-react';
+import { ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const capabilities = [
   "Operational Efficiency & Optimization",
@@ -20,6 +21,14 @@ export default function AssistanceSection() {
   const [activeTab, setActiveTab] = useState<'capabilities' | 'industries' | null>(null);
   const [selectedCapability, setSelectedCapability] = useState("Capabilities");
   const [selectedIndustry, setSelectedIndustry] = useState("Industries");
+  const router = useRouter();
+
+  const handleBeginAnalysis = () => {
+    if (selectedCapability !== "Capabilities" && selectedIndustry !== "Industries") {
+      const industryParam = selectedIndustry.toLowerCase().replace(/\s+/g, '-');
+      router.push(`/consultancy/${industryParam}?capability=${encodeURIComponent(selectedCapability)}`);
+    }
+  };
 
   return (
     <section className="relative py-24 bg-[#0a0f1e] overflow-hidden">
@@ -114,6 +123,25 @@ export default function AssistanceSection() {
                   </AnimatePresence>
                 </div>
               </div>
+
+              {/* Action Button: Begin Strategic Analysis */}
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ 
+                  opacity: (selectedCapability !== "Capabilities" && selectedIndustry !== "Industries") ? 1 : 0.3,
+                  y: 0 
+                }}
+                className="mt-12"
+              >
+                <button
+                  disabled={selectedCapability === "Capabilities" || selectedIndustry === "Industries"}
+                  onClick={handleBeginAnalysis}
+                  className="group flex items-center justify-center gap-3 w-full bg-[#143D2C] text-[#A1F28B] py-5 rounded-2xl font-black uppercase tracking-widest text-sm transition-all hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:grayscale disabled:cursor-not-allowed shadow-xl hover:shadow- emerald-900/20"
+                >
+                  <Sparkles className="w-5 h-5 group-hover:rotate-12 transition-transform" />
+                  Begin Strategic Analysis
+                </button>
+              </motion.div>
             </motion.div>
           </div>
 
