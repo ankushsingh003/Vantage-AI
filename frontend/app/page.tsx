@@ -32,7 +32,7 @@ export default function Home() {
     { id: "printing",     name: "Commercial Printing",     icon: <Printer strokeWidth={2.5} className="w-8 h-8" />,          color: "text-[#143D2C] group-hover:text-white" },
     { id: "oil",          name: "Oil & Gas",               icon: <Fuel strokeWidth={2.5} className="w-8 h-8" />,             color: "text-[#143D2C] group-hover:text-white" },
     { id: "coal",         name: "Coal & Mining",           icon: <Factory strokeWidth={2.5} className="w-8 h-8" />,          color: "text-[#143D2C] group-hover:text-white" },
-    { id: "finance",      name: "Finance & Banking",       icon: <Landmark strokeWidth={2.5} className="w-8 h-8" />,         color: "text-[#143D2C] group-hover:text-white" },
+    { id: "finance",      name: "Finance & Banking",       icon: <Landmark strokeWidth={2.5} className="w-8 h-8" />,         color: "text-[#143D2C] group-hover:text-white", image: "/images/industries/banking_collage.png" },
     { id: "retail",       name: "Retail & E-commerce",     icon: <ShoppingCart strokeWidth={2.5} className="w-8 h-8" />,     color: "text-[#143D2C] group-hover:text-white" },
     { id: "real_estate",  name: "Real Estate",             icon: <Building2 strokeWidth={2.5} className="w-8 h-8" />,        color: "text-[#143D2C] group-hover:text-white" },
     { id: "energy",       name: "Renewable Energy",        icon: <Zap strokeWidth={2.5} className="w-8 h-8" />,              color: "text-[#143D2C] group-hover:text-white" },
@@ -238,20 +238,34 @@ export default function Home() {
                   href={`/dashboard/${ind.id}`}
                   className="group relative flex flex-col justify-between p-8 h-64 rounded-[28px] bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-white/5 hover:bg-[#143D2C] dark:hover:bg-[#A1F28B] transition-all duration-500 hover:scale-[1.02] cursor-pointer overflow-hidden shadow-sm hover:shadow-2xl"
                 >
-                  <div className="absolute top-0 right-0 p-6 transform translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500 opacity-0 group-hover:opacity-100">
-                     <TrendingUp className="w-10 h-10 text-[#A1F28B] dark:text-[#143D2C]" />
-                  </div>
+                  {/* Industry Image Background (if exists) */}
+                  {ind.image && (
+                    <div className="absolute inset-0 z-0 overflow-hidden">
+                       <img 
+                        src={ind.image} 
+                        alt={ind.name}
+                        className="w-full h-full object-cover opacity-[0.15] dark:opacity-[0.25] group-hover:opacity-40 group-hover:scale-110 transition-all duration-700" 
+                       />
+                       <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/50 to-white dark:via-transparent dark:to-slate-950/80" />
+                    </div>
+                  )}
 
-                  <div className={`p-3 rounded-xl w-fit transition-colors duration-500 ${ind.color} group-hover:bg-white/10`}>
-                    {ind.icon}
-                  </div>
-                  
-                  <div>
-                    <h2 className="text-xl font-black text-[#143D2C] dark:text-white group-hover:text-white dark:group-hover:text-[#143D2C] transition-colors duration-500 tracking-tight leading-none mb-2">
-                      {ind.name}
-                    </h2>
-                    <div className="flex items-center gap-2 group-hover:gap-4 transition-all duration-500 text-[10px] font-black uppercase tracking-widest text-[#A1F28B] group-hover:text-white/80 dark:group-hover:text-[#143D2C]/80">
-                      View Insights <div className="w-6 h-[1px] bg-current" />
+                  <div className="relative z-10 w-full h-full flex flex-col justify-between">
+                    <div className="absolute top-0 right-0 transform translate-x-4 -translate-y-4 group-hover:translate-x-0 group-hover:translate-y-0 transition-transform duration-500 opacity-0 group-hover:opacity-100">
+                      <TrendingUp className="w-10 h-10 text-[#A1F28B] dark:text-[#143D2C]" />
+                    </div>
+
+                    <div className={`p-3 rounded-xl w-fit transition-colors duration-500 ${ind.color} group-hover:bg-white/10`}>
+                      {ind.icon}
+                    </div>
+                    
+                    <div>
+                      <h2 className="text-xl font-black text-[#143D2C] dark:text-white group-hover:text-white dark:group-hover:text-[#143D2C] transition-colors duration-500 tracking-tight leading-none mb-2">
+                        {ind.name}
+                      </h2>
+                      <div className="flex items-center gap-2 group-hover:gap-4 transition-all duration-500 text-[10px] font-black uppercase tracking-widest text-[#A1F28B] group-hover:text-white/80 dark:group-hover:text-[#143D2C]/80">
+                        View Insights <div className="w-6 h-[1px] bg-current" />
+                      </div>
                     </div>
                   </div>
                 </Link>
