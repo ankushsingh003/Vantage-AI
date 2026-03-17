@@ -148,5 +148,4 @@ export default function AssistanceSection() {
       `}</style>
     </section>
   );
-  );
 }
