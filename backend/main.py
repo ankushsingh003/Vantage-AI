@@ -32,6 +32,15 @@ app.include_router(market.router, prefix="/api", tags=["Market Intelligence"])
 app.include_router(rag.router, prefix="/api/rag", tags=["Knowledge RAG"])
 app.include_router(ws_signals.router, tags=["Streams"])  # WS routes don't use /api prefix
 
+from backend.services.market_engine.intelligence_service import intelligence_service
+
+@app.get("/api/intelligence/full-report")
+async def get_full_intelligence_report():
+    """
+    Returns data for all 5 consultancy panels.
+    """
+    return await intelligence_service.get_full_report()
+
 @app.get("/")
 def read_root():
     return {"status": "Market Intelligence API is running"}

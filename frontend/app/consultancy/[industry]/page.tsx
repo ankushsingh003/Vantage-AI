@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useSearchParams } from 'next/navigation';
 import { 
   Activity, 
@@ -11,33 +11,42 @@ import {
   BrainCircuit, 
   LineChart, 
   Globe, 
-  ShieldCheck 
+  ShieldCheck,
+  TrendingUp,
+  Scale,
+  Settings,
+  Database
 } from 'lucide-react';
+
+interface IntelligenceData {
+  financial: string;
+  regulatory: string;
+  digital: string;
+  growth: string;
+  operational: string;
+}
 
 export default function ConsultancyIntelligencePage({ params }: { params: { industry: string } }) {
   const searchParams = useSearchParams();
   const capability = searchParams.get('capability');
   const [loading, setLoading] = useState(true);
-  const [analysisData, setAnalysisData] = useState<any>(null);
+  const [report, setReport] = useState<IntelligenceData | null>(null);
 
   useEffect(() => {
-    // Simulate real-time data fetching and LLM inference
-    const timer = setTimeout(() => {
-      setAnalysisData({
-        industry: params.industry,
-        capability: capability,
-        signals: [
-          "Recent market volatility in " + params.industry + " sector.",
-          "High correlation between " + capability + " and operational margins.",
-          "Competitor A recently integrated RAG-based diagnostics."
-        ],
-        inference: "The convergence of AI-driven diagnostics and " + capability + " and " + params.industry + " represents a 42% growth opportunity. Enterprises should prioritize vector-engine integration for real-time strategic pivot capabilities."
-      });
-      setLoading(false);
-    }, 3000);
+    const fetchReport = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/api/intelligence/full-report');
+        const data = await response.json();
+        setReport(data);
+      } catch (error) {
+        console.error("Error fetching report:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    return () => clearTimeout(timer);
-  }, [params.industry, capability]);
+    fetchReport();
+  }, [params.industry]);
 
   if (loading) {
     return (
@@ -49,94 +58,156 @@ export default function ConsultancyIntelligencePage({ params }: { params: { indu
         >
           <BrainCircuit className="w-16 h-16 text-emerald-400" />
         </motion.div>
-        <h2 className="text-white text-2xl font-black uppercase tracking-[0.2em]">Initializing Intelligence Core...</h2>
-        <p className="text-emerald-500/60 mt-4 animate-pulse uppercase tracking-widest text-xs font-bold">Synthesizing real-time market data</p>
+        <h2 className="text-white text-2xl font-black uppercase tracking-[0.2em]">Synchronizing Intelligence Nodes...</h2>
+        <p className="text-emerald-500/60 mt-4 animate-pulse uppercase tracking-widest text-xs font-bold">Aggregating Global Multi-Source Data</p>
       </div>
     );
   }
 
+  const panels = [
+    { title: "Financial Advisory", icon: <TrendingUp />, data: report?.financial, color: "from-blue-600/20 to-transparent", border: "border-blue-500/30" },
+    { title: "Regulatory Compliance", icon: <ShieldCheck />, data: report?.regulatory, color: "from-amber-600/20 to-transparent", border: "border-amber-500/30" },
+    { title: "Digital Transformation", icon: <Database />, data: report?.digital, color: "from-emerald-600/20 to-transparent", border: "border-emerald-500/30" },
+    { title: "Strategic Growth", icon: <TrendingUp />, data: report?.growth, color: "from-purple-600/20 to-transparent", border: "border-purple-500/30" },
+    { title: "Operational Efficiency", icon: <Settings />, data: report?.operational, color: "from-cyan-600/20 to-transparent", border: "border-cyan-500/30" }
+  ];
+
   return (
-    <main className="min-h-screen bg-[#020617] text-white p-6 lg:p-12">
+    <main className="min-h-screen bg-[#020617] text-white p-6 lg:p-12 overflow-x-hidden">
       <div className="max-w-7xl mx-auto">
-        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-white/5 pb-12">
+        <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-16 border-b border-white/5 pb-12 relative">
+            <div className="absolute top-0 right-0 opacity-10 blur-3xl w-64 h-64 bg-emerald-500 rounded-full -mr-32 -mt-32"></div>
           <div>
             <div className="flex items-center gap-3 text-emerald-400 text-xs font-black uppercase tracking-[0.4em] mb-4">
-              <Activity className="w-4 h-4" /> Strategic Intelligence Report
+              <Activity className="w-4 h-4" /> Comprehensive Multi-Panel Report
             </div>
             <h1 className="text-5xl lg:text-7xl font-black tracking-tighter leading-none">
-              {params.industry.toUpperCase()} <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-white italic">ANALYSIS.</span>
+              STRATEGIC <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-white italic uppercase">{params.industry.replace('-',' ')} CORE.</span>
             </h1>
           </div>
           <div className="bg-white/5 backdrop-blur-3xl rounded-3xl p-6 border border-white/10 max-w-sm">
-             <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest block mb-2">Capability Focus</span>
+             <span className="text-[10px] font-black text-emerald-500 uppercase tracking-widest block mb-1">Primary Selection</span>
              <p className="text-lg font-bold text-white leading-tight">{capability}</p>
           </div>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Signal Stream */}
-          <div className="lg:col-span-1 flex flex-col gap-6">
-             <div className="bg-white/5 rounded-[32px] p-8 border border-white/10 h-full">
-                <h3 className="text-xl font-black mb-8 flex items-center gap-3 uppercase tracking-tighter">
-                  <Search className="text-emerald-400" /> Signal Stream
-                </h3>
-                <div className="flex flex-col gap-4">
-                  {analysisData.signals.map((signal: string, i: number) => (
-                    <motion.div 
-                      key={i}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.2 }}
-                      className="p-4 bg-black/40 rounded-2xl border border-white/5 text-sm text-slate-400 font-medium leading-relaxed"
-                    >
-                      {signal}
-                    </motion.div>
-                  ))}
+        {/* Bento Grid Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-6 lg:grid-cols-6 grid-rows-2 gap-6 h-auto md:h-[800px]">
+          {/* Panel 1: Financial (Large) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className={`md:col-span-3 md:row-span-1 bg-gradient-to-br ${panels[0].color} rounded-[40px] p-8 border ${panels[0].border} relative overflow-hidden group`}
+          >
+             <div className="relative z-10 h-full flex flex-col">
+                <div className="flex items-center gap-4 mb-8">
+                   <div className="w-12 h-12 bg-blue-500/20 rounded-2xl flex items-center justify-center border border-blue-500/40">
+                      {React.cloneElement(panels[0].icon as React.ReactElement, { className: "text-blue-400 w-6 h-6" })}
+                   </div>
+                   <h3 className="text-2xl font-black italic tracking-tighter">FINANCIAL ADVISORY</h3>
+                </div>
+                <p className="text-xl lg:text-2xl font-bold leading-snug mb-8">{panels[0].data}</p>
+                <div className="mt-auto pt-6 border-t border-white/5 flex justify-between items-center opacity-60 text-[10px] font-mono uppercase tracking-widest">
+                   <span>DATA_SRC // CMS-PROVIDER</span>
+                   <span>CONFIDENCE // 98%</span>
                 </div>
              </div>
-          </div>
+          </motion.div>
 
-          {/* Strategic Inference */}
-          <div className="lg:col-span-2">
-             <div className="bg-gradient-to-br from-emerald-950/40 to-slate-900/40 rounded-[48px] p-10 lg:p-16 border border-emerald-500/20 shadow-2xl relative overflow-hidden h-full">
-                {/* Visual Flair */}
-                <div className="absolute top-0 right-0 p-12 opacity-10">
-                   <Cpu className="w-64 h-64 text-emerald-400" />
+          {/* Panel 2: Regulatory */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className={`md:col-span-3 md:row-span-1 bg-gradient-to-br ${panels[1].color} rounded-[40px] p-8 border ${panels[1].border} relative overflow-hidden`}
+          >
+             <div className="relative z-10 h-full flex flex-col">
+                <div className="flex items-center gap-4 mb-8">
+                   <div className="w-12 h-12 bg-amber-500/20 rounded-2xl flex items-center justify-center border border-amber-500/40">
+                      {React.cloneElement(panels[1].icon as React.ReactElement, { className: "text-amber-400 w-6 h-6" })}
+                   </div>
+                   <h3 className="text-2xl font-black italic tracking-tighter">REGULATORY COMPLIANCE</h3>
                 </div>
-                
-                <div className="relative z-10">
-                   <div className="flex items-center gap-4 mb-10">
-                      <div className="w-12 h-12 bg-emerald-500 rounded-2xl flex items-center justify-center">
-                         <Zap className="text-white w-6 h-6" />
-                      </div>
-                      <h3 className="text-3xl font-black tracking-tighter uppercase">AI Strategic Inference</h3>
-                   </div>
-                   
-                   <p className="text-2xl lg:text-3xl font-bold leading-tight text-white/90 mb-12">
-                      {analysisData.inference}
-                   </p>
-
-                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-auto">
-                      <div className="bg-black/40 p-6 rounded-[24px] border border-white/5">
-                         <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-2">Confidence Score</span>
-                         <span className="text-4xl font-black tabular-nums">96.4%</span>
-                      </div>
-                      <div className="bg-black/40 p-6 rounded-[24px] border border-white/5">
-                         <span className="text-[10px] font-black text-emerald-400 uppercase tracking-widest block mb-2">Resource Allocation</span>
-                         <span className="text-4xl font-black tabular-nums">HIGH</span>
-                      </div>
-                   </div>
+                <p className="text-xl lg:text-2xl font-bold leading-snug mb-8">{panels[1].data}</p>
+                <div className="mt-auto pt-6 border-t border-white/5 flex justify-between items-center opacity-60 text-[10px] font-mono uppercase tracking-widest">
+                   <span>DATA_SRC // OPEN_FDA</span>
+                   <span>RISK // MINIMAL</span>
                 </div>
              </div>
-          </div>
+          </motion.div>
+
+          {/* Panel 3: Digital Transformation (Wide) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className={`md:col-span-4 md:row-span-1 bg-gradient-to-br ${panels[2].color} rounded-[40px] p-12 border ${panels[2].border} relative overflow-hidden`}
+          >
+              <div className="absolute right-0 bottom-0 p-8 opacity-10">
+                 <BrainCircuit className="w-48 h-48 text-emerald-400" />
+              </div>
+             <div className="relative z-10 h-full flex flex-col">
+                <div className="flex items-center gap-4 mb-8">
+                   <div className="w-12 h-12 bg-emerald-500/20 rounded-2xl flex items-center justify-center border border-emerald-500/40">
+                      {React.cloneElement(panels[2].icon as React.ReactElement, { className: "text-emerald-400 w-6 h-6" })}
+                   </div>
+                   <h3 className="text-3xl font-black italic tracking-tighter">DIGITAL TRANSFORMATION</h3>
+                </div>
+                <p className="text-2xl lg:text-3xl font-bold leading-tight max-w-2xl mb-8">{panels[2].data}</p>
+                <div className="mt-auto pt-6 border-t border-white/5 flex justify-between items-center opacity-60 text-[10px] font-mono uppercase tracking-widest">
+                   <span>INFRASTRUCTURE // HL7-FHIR</span>
+                   <span>LATENCY // 420MS</span>
+                </div>
+             </div>
+          </motion.div>
+
+          {/* Panel 4: Strategic Growth (Tall-ish square) */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className={`md:col-span-2 md:row-span-1 bg-gradient-to-br ${panels[3].color} rounded-[40px] p-8 border ${panels[3].border} relative overflow-hidden`}
+          >
+             <div className="relative z-10 h-full flex flex-col">
+                <div className="flex items-center gap-4 mb-8">
+                   <div className="w-12 h-12 bg-purple-500/20 rounded-2xl flex items-center justify-center border border-purple-500/40">
+                      {React.cloneElement(panels[3].icon as React.ReactElement, { className: "text-purple-400 w-6 h-6" })}
+                   </div>
+                   <h3 className="text-2xl font-black italic tracking-tighter uppercase">Strategic Growth</h3>
+                </div>
+                <p className="text-xl font-bold leading-relaxed mb-8">{panels[3].data}</p>
+                <div className="mt-auto pt-6 border-t border-white/5 flex justify-between items-center opacity-60 text-[10px] font-mono uppercase tracking-widest">
+                   <span>DATA_SRC // FMP</span>
+                   <span>M&A // HIGH</span>
+                </div>
+             </div>
+          </motion.div>
         </div>
 
-        {/* Technical Footer */}
+        {/* Panel 5: Operational Efficiency (Full width bar) */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className={`mt-6 bg-gradient-to-r ${panels[4].color} rounded-[40px] p-10 border ${panels[4].border} relative overflow-hidden`}
+        >
+           <div className="flex flex-col md:flex-row items-center gap-8 relative z-10">
+              <div className="w-16 h-16 bg-cyan-500 rounded-3xl flex items-center justify-center shrink-0">
+                 {React.cloneElement(panels[4].icon as React.ReactElement, { className: "text-white w-8 h-8" })}
+              </div>
+              <div className="flex-1">
+                 <h3 className="text-xs font-black uppercase tracking-[0.4em] text-cyan-400 mb-2">Operational Efficiency Engine</h3>
+                 <p className="text-xl font-bold italic leading-tight">{panels[4].data}</p>
+              </div>
+           </div>
+        </motion.div>
+
+        {/* Dashboard Footer */}
         <footer className="mt-16 pt-12 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 opacity-30 font-mono text-[10px] tracking-widest">
            <div className="flex gap-8">
-              <span>CORE_v2.0 // RAG_VECTOR_ENABLED</span>
-              <span>INFERENCE_LATENCY // 420MS</span>
+              <span>REPORT_ID // STRAT-INT-2026-X</span>
+              <span>ENGINE // GEMINI-RAG-V2</span>
            </div>
            <div>ENGINEERED BY ANKUSH KUMAR SINGH</div>
         </footer>
