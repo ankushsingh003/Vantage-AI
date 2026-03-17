@@ -18,22 +18,23 @@ class IntelligenceService:
         self.client = Groq(api_key=self.groq_key)
 
     async def generate_inference(self, pillar: str, data: str) -> str:
-        """ Uses GROQ to generate a strategic consultancy inference """
+        """ Uses GROQ to generate a sharp, human-like strategic inference """
         try:
             prompt = f"""
-            System: You are a Tier-1 Strategic Consultant (McKinsey/BCG style).
-            Context: Raw data signal from {pillar}: "{data}"
-            Task: Provide a 2-sentence 'Expert Strategic Outlook' that sounds premium and authoritative. Focus on business impact.
-            Do not include any preamble.
+            System: You are a senior Human Strategy Consultant.
+            Context: {pillar} data: "{data}"
+            Task: Provide a 1-2 sentence sharp strategic take. 
+            Style: Direct, insightful, zero fluff. No "AI-isms" like "As we navigate" or "unlocking synergistic value". 
+            Just tell the client what this actually means for their bottom line.
             """
             chat_completion = self.client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
                 model="llama-3.3-70b-versatile",
             )
-            return chat_completion.choices[0].message.content
+            return chat_completion.choices[0].message.content.strip().replace('"', '')
         except Exception as e:
             logger.error(f"GROQ Inference Error: {e}")
-            return f"Strategic Outlook: Current {pillar} signals suggest high-volatility/high-opportunity phase. Recommend aggressive positioning."
+            return f"{pillar} signal indicates a clear move toward consolidation. We should lock in these efficiencies before the window closes."
 
     async def fetch_financial_advisory(self) -> Dict[str, Any]:
         """ Fetches price transparency/affiliation data from CMS """
@@ -121,11 +122,11 @@ class IntelligenceService:
             # Construct a rich context object for the LLM
             context = json.dumps({k: v.get("short") for k, v in all_data.items()}, indent=2)
             prompt = f"""
-            System: You are a Tier-1 Principal Consultant.
-            Data Context: {context}
-            Task: Synthesize cross-pillar relations between digital (HL7/FHIR), operational (labor-to-output), and regulatory signals.
-            Output exactly TWO CONCISE LINES of high-impact strategic intelligence.
-            Include all technical keywords but minimize filler. No preamble.
+            System: You are a Lead Human Strategy Consultant.
+            Context: {context}
+            Task: Synthesis cross-pillar relations (digital, operational, regulatory).
+            Output: TWO SHARP LINES of strategic take. 
+            Style: Direct, insightful, no AI "synergy" fluff. Tell the client exactly where to put their money.
             """
             chat_completion = self.client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
@@ -134,7 +135,7 @@ class IntelligenceService:
             return chat_completion.choices[0].message.content
         except Exception as e:
             logger.error(f"Master Inference Error: {e}")
-            return "Synergized HL7/FHIR interoperability and AI-orchestrated labor optimization mitigate regulatory risks while accelerating consolidation.\nOptimized cost structures across digital/operational pillars unlock unprecedented margin expansion and market leadership."
+            return "Combining HL7/FHIR interoperability with AI labor optimization will shield you from regulatory fallout.\nRefining cost structures now is the only way to sustain this M&A pace through Q4."
 
     async def get_full_report(self) -> Dict[str, Any]:
         tasks = [
