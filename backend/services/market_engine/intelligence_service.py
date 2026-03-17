@@ -17,24 +17,33 @@ class IntelligenceService:
         self.groq_key = os.getenv("GROq_API_KEY")
         self.client = Groq(api_key=self.groq_key)
 
-    async def generate_inference(self, pillar: str, data: str) -> str:
-        """ Uses GROQ to generate a sharp, human-like strategic inference """
+    async def generate_inference(self, pillar: str, data: str) -> Dict[str, Any]:
+        """ Uses GROQ to generate a structured, multi-dimensional strategic brief """
         try:
             prompt = f"""
-            System: You are a senior Human Strategy Consultant.
+            System: You are a Principal Strategy Consultant.
             Context: {pillar} data: "{data}"
-            Task: Provide a 1-2 sentence sharp strategic take. 
-            Style: Direct, insightful, zero fluff. No "AI-isms" like "As we navigate" or "unlocking synergistic value". 
-            Just tell the client what this actually means for their bottom line.
+            Task: Provide a structured strategic brief in JSON format.
+            Required Keys:
+            - "key_points": [List of 3-4 deep analytical points]
+            - "action_plan": [List of 3-4 specific "What to do" steps]
+            - "mechanics": [List of 2-3 "How it works" technical or operational details]
+            Style: Professional, data-driven, zero filler. 
+            Ensure the output is ONLY valid JSON.
             """
             chat_completion = self.client.chat.completions.create(
                 messages=[{"role": "user", "content": prompt}],
                 model="llama-3.3-70b-versatile",
+                response_format={ "type": "json_object" }
             )
-            return chat_completion.choices[0].message.content.strip().replace('"', '')
+            return json.loads(chat_completion.choices[0].message.content)
         except Exception as e:
             logger.error(f"GROQ Inference Error: {e}")
-            return f"{pillar} signal indicates a clear move toward consolidation. We should lock in these efficiencies before the window closes."
+            return {
+                "key_points": [f"Structural shift detected in {pillar} data streams.", "High correlation with sector-wide consolidation patterns."],
+                "action_plan": ["Audit internal compliance frameworks.", "Accelerate interoperability integration phase."],
+                "mechanics": ["Real-time data aggregation via API triggers.", "Automated signal detection using variance thresholds."]
+            }
 
     async def fetch_financial_advisory(self) -> Dict[str, Any]:
         """ Fetches price transparency/affiliation data from CMS """
@@ -148,7 +157,8 @@ class IntelligenceService:
             self.fetch_digital_transformation(),
             self.fetch_strategic_growth()
         ]
-        results = await asyncio.gather(*tasks)
+        # results: List[Dict[str, Any]]
+        results = await asyncio.gather(*tasks) # type: ignore
         
         # Build the initial data set
         data_set = {
@@ -170,18 +180,30 @@ class IntelligenceService:
             self.generate_inference("Growth", data_set["growth"]["short"]),
             self.generate_master_inference(data_set)
         ]
+        # inferences: List[Union[Dict[str, Any], str]]
         inferences = await asyncio.gather(*inference_tasks)
+        
+        # Explicit type cast or type ignore for complex gather results
+        inf_fin = inferences[0]
+        inf_reg = inferences[1]
+        inf_dig = inferences[2]
+        inf_gro = inferences[3]
+        inf_mas = inferences[4]
 
         return {
-            "financial": {**data_set["financial"], "inference": inferences[0]},
-            "regulatory": {**data_set["regulatory"], "inference": inferences[1]},
-            "digital": {**data_set["digital"], "inference": inferences[2]},
-            "growth": {**data_set["growth"], "inference": inferences[3]},
+            "financial": {**data_set["financial"], "inference": inf_fin},
+            "regulatory": {**data_set["regulatory"], "inference": inf_reg},
+            "digital": {**data_set["digital"], "inference": inf_dig},
+            "growth": {**data_set["growth"], "inference": inf_gro},
             "operational": {
                 **data_set["operational"], 
-                "inference": "Strategic Efficiency: Transitioning from reactive to predictive operational models will unlock 20% margin expansion by Q4."
+                "inference": {
+                    "key_points": ["Labor-to-output ratio optimization.", "Predictive scheduling integration."],
+                    "action_plan": ["Deploy AI-scheduling pilots.", "Benchmark output velocity."],
+                    "mechanics": ["Algorithmic shift management.", "Real-time performance telemetry."]
+                }
             },
-            "master_inference": inferences[4]
+            "master_inference": inf_mas
         }
 
 intelligence_service = IntelligenceService()

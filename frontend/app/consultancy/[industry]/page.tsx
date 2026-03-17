@@ -17,9 +17,15 @@ import {
   Zap
 } from 'lucide-react';
 
+interface IntelligenceInference {
+  key_points: string[];
+  action_plan: string[];
+  mechanics: string[];
+}
+
 interface PanelData {
   short: string;
-  inference: string;
+  inference: IntelligenceInference;
   trends: number[];
   raw: any[];
 }
@@ -245,18 +251,55 @@ export default function ConsultancyIntelligencePage({ params }: { params: { indu
                         <h2 className="text-3xl lg:text-4xl font-black italic tracking-tighter mb-4 leading-none">{panels[activePanel].title}</h2>
                         <p className="text-emerald-400 text-[9px] font-mono tracking-widest uppercase mb-12">DATA INTEGRITY // 100% SECURE</p>
                         
-                        <div className="space-y-8">
+                        <div className="space-y-12">
+                           {/* 1. Analytical Insights */}
                            <div>
-                              <h4 className="text-[9px] uppercase tracking-widest text-white/40 mb-4">Deep Strategy Analysis</h4>
-                              <p className="text-base font-normal leading-relaxed text-white/80 whitespace-pre-line">
-                                 {panels[activePanel].data?.inference}
-                              </p>
+                              <h4 className="text-[10px] uppercase tracking-[0.4em] text-emerald-400 mb-6 flex items-center gap-2">
+                                 <div className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>
+                                 Analytical Insights
+                              </h4>
+                              <div className="space-y-4">
+                                 {panels[activePanel].data?.inference?.key_points?.map((point, i) => (
+                                    <motion.div 
+                                       key={i}
+                                       initial={{ opacity: 0, x: -10 }}
+                                       animate={{ opacity: 1, x: 0 }}
+                                       transition={{ delay: i * 0.1 }}
+                                       className="flex items-start gap-4 group/point"
+                                    >
+                                       <div className="mt-2 w-1.5 h-1.5 rounded-full border border-emerald-500/50 group-hover/point:bg-emerald-500 transition-colors"></div>
+                                       <p className="text-base text-white/70 leading-relaxed">{point}</p>
+                                    </motion.div>
+                                 ))}
+                              </div>
                            </div>
-                           <div className="pt-8 border-t border-white/5">
-                              <h4 className="text-[10px] uppercase tracking-widest text-white/40 mb-4">Signal Breakdown</h4>
-                              <p className="text-base font-medium leading-relaxed opacity-70">
-                                 {panels[activePanel].data?.short}
-                              </p>
+
+                           {/* 2. Action Plan - What to do */}
+                           <div className="bg-emerald-500/5 rounded-3xl p-8 border border-emerald-500/10">
+                              <h4 className="text-[10px] uppercase tracking-[0.4em] text-emerald-400 mb-6">Strategic Action Plan</h4>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                 {panels[activePanel].data?.inference?.action_plan?.map((step, i) => (
+                                    <div key={i} className="flex items-center gap-4">
+                                       <div className="w-8 h-8 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs font-black text-emerald-400">
+                                          {i + 1}
+                                       </div>
+                                       <p className="text-sm font-bold text-white/90">{step}</p>
+                                    </div>
+                                 ))}
+                              </div>
+                           </div>
+
+                           {/* 3. Mechanics - How it works */}
+                           <div>
+                              <h4 className="text-[10px] uppercase tracking-[0.4em] text-white/30 mb-6">Operational Mechanics</h4>
+                              <div className="space-y-4">
+                                 {panels[activePanel].data?.inference?.mechanics?.map((mech, i) => (
+                                    <div key={i} className="p-4 bg-white/5 rounded-2xl border border-white/5 flex items-center justify-between group/mech">
+                                       <span className="text-sm text-white/60">{mech}</span>
+                                       <div className="w-2 h-2 rounded-full bg-white/10 group-hover/mech:bg-emerald-500 transition-colors"></div>
+                                    </div>
+                                 ))}
+                              </div>
                            </div>
                         </div>
                      </div>
