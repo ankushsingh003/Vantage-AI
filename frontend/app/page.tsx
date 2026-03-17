@@ -184,24 +184,24 @@ export default function Home() {
             </div>
 
             {/* Right: Strategy Metrics Card */}
-            <div className="flex flex-col gap-6 order-3">
-               <div className="bg-white/5 backdrop-blur-2xl rounded-[32px] p-8 border border-white/10 flex flex-col gap-4 shadow-2xl items-start text-left">
+            <div className="flex flex-col gap-4 order-3">
+               <div className="bg-white/5 backdrop-blur-2xl rounded-[24px] p-5 border border-white/10 flex flex-col gap-3 shadow-2xl items-start text-left">
                   <div className="flex flex-col gap-1 w-full">
-                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-white/5 pb-2">Strategy Accuracy:</span>
-                     <div className="flex items-baseline gap-2 mt-2">
-                        <span className="text-5xl font-black text-white">98.2%</span>
-                        <div className="flex items-center gap-1 text-emerald-400 text-[10px] font-black">
-                           <TrendingUp className="w-3 h-3" /> +2.4%
+                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border-b border-white/5 pb-1">Strategy Accuracy:</span>
+                     <div className="flex items-baseline gap-2 mt-1">
+                        <span className="text-4xl font-black text-white">98.2%</span>
+                        <div className="flex items-center gap-1 text-emerald-400 text-[9px] font-black">
+                           <TrendingUp className="w-2.5 h-2.5" /> +2.4%
                         </div>
                      </div>
                   </div>
                   
                   <div className="flex flex-col gap-1 w-full">
-                     <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest border-b border-white/5 pb-2">Roadside Insights:</span>
-                     <span className="text-3xl font-black text-white tabular-nums mt-1">3.1M+</span>
+                     <span className="text-[9px] font-bold text-slate-400 uppercase tracking-widest border-b border-white/5 pb-1">Roadside Insights:</span>
+                     <span className="text-2xl font-black text-white tabular-nums mt-0.5">3.1M+</span>
                   </div>
 
-                  <div className="w-full text-center text-emerald-500/40 text-[9px] font-black uppercase tracking-[0.3em] mt-2 italic">xprilion consultancy</div>
+                  <div className="w-full text-center text-emerald-500/40 text-[8px] font-black uppercase tracking-[0.3em] mt-1 italic">xprilion consultancy</div>
                </div>
             </div>
           </div>
