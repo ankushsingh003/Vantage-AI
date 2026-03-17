@@ -189,15 +189,15 @@ export default function ConsultancyIntelligencePage({ params }: { params: { indu
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                    <div>
                       <span className="text-[10px] text-white/40 uppercase block mb-1 tracking-widest">The "Why" // Problem</span>
-                      <p className="text-base font-bold italic text-white leading-tight">"{report?.operational?.specialized?.executive_summary?.why}"</p>
+                      <p className="text-base font-bold italic text-white leading-tight">"{panels[focusedPanelIdx].data?.specialized?.executive_summary?.why || "Analyzing institutional friction signals..."}"</p>
                    </div>
                    <div className="border-l border-white/5 pl-6">
                       <span className="text-[10px] text-white/40 uppercase block mb-1 tracking-widest">The "What" // Solution</span>
-                      <p className="text-base font-bold text-white leading-tight">{report?.operational?.specialized?.executive_summary?.what}</p>
+                      <p className="text-base font-bold text-white leading-tight">{panels[focusedPanelIdx].data?.specialized?.executive_summary?.what || "Synthesizing AI mitigation..."}</p>
                    </div>
                    <div className="border-l border-white/5 pl-6">
                       <span className="text-[10px] text-emerald-400/60 uppercase block mb-1 tracking-widest">Global Impact // ROI</span>
-                      <p className="text-xl font-black text-emerald-400 leading-tight">{report?.operational?.specialized?.executive_summary?.impact}</p>
+                      <p className="text-xl font-black text-emerald-400 leading-tight">{panels[focusedPanelIdx].data?.specialized?.executive_summary?.impact || "Calculating project value..."}</p>
                    </div>
                 </div>
              </div>
