@@ -13,7 +13,8 @@ import {
   X,
   ArrowUpRight,
   TrendingDown,
-  BarChart3
+  BarChart3,
+  Zap
 } from 'lucide-react';
 
 interface PanelData {
