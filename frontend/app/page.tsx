@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { motion, Variants } from "framer-motion";
 import AssistanceSection from "../components/AssistanceSection";
+import AboutSection from "../components/AboutSection";
 
 export default function Home() {
   const industries = [
@@ -217,6 +218,7 @@ export default function Home() {
           </div>
         </motion.div>
       </section>
+      <AboutSection />
       <AssistanceSection />
 
       {/* Select an Industry Section */}
