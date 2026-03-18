@@ -21,6 +21,7 @@ export default function LoginPage() {
     
     // Simulate login delay
     setTimeout(() => {
+      localStorage.setItem("vantage_session", "active");
       router.push(redirectPath);
     }, 1500);
   };

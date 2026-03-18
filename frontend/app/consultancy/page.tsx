@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { 
   Briefcase, 
@@ -19,12 +20,31 @@ import Link from "next/link";
 type Step = 1 | 2 | 3 | 4;
 
 export default function ConsultancyPage() {
+  const router = useRouter();
   const [step, setStep] = useState<Step>(1);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     domain: "",
     purpose: "",
     goal: ""
   });
+
+  useEffect(() => {
+    const session = localStorage.getItem("vantage_session");
+    if (!session) {
+      router.push("/login?redirect=/consultancy");
+    } else {
+      setIsLoading(false);
+    }
+  }, [router]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-[#FBF9F4] dark:bg-[#020617] flex items-center justify-center">
+        <div className="h-8 w-8 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
+  }
 
   const nextStep = () => setStep((s) => (s + 1) as Step);
   const prevStep = () => setStep((s) => (s - 1) as Step);

@@ -12,9 +12,12 @@ import {
   Menu,
   X,
   LogIn,
+  LogOut,
   PhoneCall,
+  User,
 } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from "framer-motion";
+import { useEffect } from "react";
 
 const navItems = [
   { name: "Home", icon: LayoutDashboard, href: "/" },
@@ -27,7 +30,19 @@ export default function Navbar() {
   const pathname = usePathname();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [hidden, setHidden] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const { scrollY } = useScroll();
+
+  useEffect(() => {
+    const session = localStorage.getItem("vantage_session");
+    setIsLoggedIn(!!session);
+  }, [pathname]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("vantage_session");
+    setIsLoggedIn(false);
+    window.location.href = "/";
+  };
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     const previous = scrollY.getPrevious() || 0;
@@ -106,12 +121,21 @@ export default function Navbar() {
               <span className="text-[9px] font-black text-slate-500 dark:text-white/60 uppercase tracking-[0.1em] whitespace-nowrap">Core Active</span>
             </div>
 
-            <Link href="/login" className="hidden sm:flex items-center gap-2 px-4 py-2 border border-[#143D2C]/10 dark:border-white/10 rounded-full font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-slate-50 dark:hover:bg-white/5">
-              Login <LogIn className="w-3 h-3" />
-            </Link>
+            {isLoggedIn ? (
+              <button 
+                onClick={handleLogout}
+                className="hidden sm:flex items-center gap-2 px-4 py-2 border border-red-500/20 dark:border-red-500/20 rounded-full font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-red-50 dark:hover:bg-red-500/10 text-red-500"
+              >
+                Logout <LogOut className="w-3 h-3" />
+              </button>
+            ) : (
+              <Link href="/login" className="hidden sm:flex items-center gap-2 px-4 py-2 border border-[#143D2C]/10 dark:border-white/10 rounded-full font-bold text-[10px] uppercase tracking-widest transition-all hover:bg-slate-50 dark:hover:bg-white/5 text-[#143D2C] dark:text-white">
+                Login <LogIn className="w-3 h-3" />
+              </Link>
+            )}
 
             <Link 
-              href="/login?redirect=/consultancy" 
+              href={isLoggedIn ? "/consultancy" : "/login?redirect=/consultancy"} 
               className="hidden sm:flex items-center gap-2 px-5 py-2.5 bg-[#143D2C] text-[#A1F28B] dark:bg-[#A1F28B] dark:text-[#143D2C] rounded-full font-bold text-[10px] uppercase tracking-widest transition-all hover:scale-105 hover:shadow-[0_0_20px_rgba(20,61,44,0.3)] dark:hover:shadow-[0_0_20px_rgba(161,242,139,0.4)] active:scale-95"
             >
               Book a call <PhoneCall className="w-3 h-3" />
@@ -159,12 +183,21 @@ export default function Navbar() {
                 );
               })}
               <div className="h-px bg-slate-200 dark:bg-white/10 my-2" />
-              <Link href="/login" onClick={() => setMobileOpen(false)}>
-                <div className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-[#A1F28B] text-[#143D2C] font-black text-sm uppercase tracking-widest justify-center">
-                  Login <LogIn className="w-5 h-5" />
-                </div>
-              </Link>
-              <Link href="/login?redirect=/consultancy" onClick={() => setMobileOpen(false)}>
+              {isLoggedIn ? (
+                <button 
+                  onClick={handleLogout}
+                  className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-red-500/10 text-red-500 font-black text-sm uppercase tracking-widest justify-center w-full"
+                >
+                  Logout <LogOut className="w-5 h-5" />
+                </button>
+              ) : (
+                <Link href="/login" onClick={() => setMobileOpen(false)}>
+                  <div className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-[#A1F28B] text-[#143D2C] font-black text-sm uppercase tracking-widest justify-center">
+                    Login <LogIn className="w-5 h-5" />
+                  </div>
+                </Link>
+              )}
+              <Link href={isLoggedIn ? "/consultancy" : "/login?redirect=/consultancy"} onClick={() => setMobileOpen(false)}>
                 <div className="flex items-center gap-4 px-6 py-4 rounded-2xl bg-[#143D2C] text-[#A1F28B] dark:bg-white/10 dark:text-white font-black text-sm uppercase tracking-widest justify-center mt-2">
                   Book a call <PhoneCall className="w-5 h-5" />
                 </div>
