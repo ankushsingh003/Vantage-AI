@@ -24,6 +24,30 @@ class IntelligenceService:
         self._cache_time: Dict[str, float] = {}
         self._cache_ttl = 300  # 5 minutes
 
+        # Industry-Specific Knowledge Anchors
+        self.industry_configs = {
+            "medical": {
+                "digital_anchor": "EHR / HL7-FHIR R4 Interoperability",
+                "operational_anchor": "Patient Triage & ALOS (Average Length of Stay)",
+                "reg_anchor": "HIPAA & FDA Safety Signals"
+            },
+            "automobiles": {
+                "digital_anchor": "CAN-Bus / V2X Telemetry & OTA readiness",
+                "operational_anchor": "JIT Inventory & Assembly Line Throughput",
+                "reg_anchor": "NHTSA Compliance & ISO 26262"
+            },
+            "restaurants": {
+                "digital_anchor": "POS Integration & Digital Ordering Velocity",
+                "operational_anchor": "Table Turnover & Revenue-per-Square-Foot",
+                "reg_anchor": "FSMA (Food Safety) & Health Code Compliance"
+            },
+            "default": {
+                "digital_anchor": "Legacy System Modernization & Cloud Latency",
+                "operational_anchor": "Supply Chain Velocity & Labor Productivity",
+                "reg_anchor": "Sector-Specific Compliance & Audit Governance"
+            }
+        }
+
     async def generate_inference(self, pillar: str, data: str) -> Dict[str, Any]:
         """ Uses GROQ to generate a structured, multi-dimensional strategic brief """
         try:
@@ -197,6 +221,9 @@ class IntelligenceService:
             
             focus_marker = next((v for k, v in markers.items() if k.lower() in focus_area.lower()), markers["Operational"])
             
+            industry_key = next((k for k in self.industry_configs.keys() if k in industry.lower()), "default")
+            config = self.industry_configs[industry_key]
+            
             context = json.dumps(all_data_shorts, indent=2)
             prompt = f"""
             System: You are an Elite Strategy Consultant (Partner Level). 
@@ -205,12 +232,16 @@ class IntelligenceService:
             Technical Logic: {focus_marker}
             
             Context: Construct an Institutional Strategic Report specifically for the "{industry}" sector, focusing on "{focus_area}". 
-            CRITICAL: Ground all recommendations in the "{industry}" domain. Use these live API signals as the factual foundation: {context}
+            CRITICAL: Ground all recommendations in the "{industry}" domain. 
+            DO NOT mention EHR, FHIR, or PATIENTS unless the industry is Medical.
+            For {industry}, use technical anchors like: {config['digital_anchor']} and {config['operational_anchor']}.
+            
+            Use these live API signals as the factual foundation: {context}
             
             Sections Required (Output ONLY valid JSON):
             1. "executive_summary": {{"why": "Specific friction point using technical metrics", "what": "Proposed FIX (e.g., agentic automation)", "impact": "Projected ROI/Value (MUST BE A SPECIFIC NUMBER, eg $2.4M or 15%)"}}
-            2. "current_state": {{"bottlenecks": ["Highly technical bottleneck 1", "Highly technical bottleneck 2"], "data_analysis": "Deep data point using metrics from API context", "regulatory_status": "Status vs FDA/Global benchmarks"}}
-            3. "tech_audit": {{"ehr_integration": "Specific sync-status (e.g., FHIR R4 connectivity status)", "automation_opportunities": ["AI Optimization (Technical)", "Deep-Learning opportunity"]}}
+            2. "current_state": {{"bottlenecks": ["Highly technical bottleneck 1", "Highly technical bottleneck 2"], "data_analysis": "Deep data point using metrics from API context", "regulatory_status": "Status vs {config['reg_anchor']} benchmarks"}}
+            3. "tech_audit": {{"core_system_sync": "Status of {config['digital_anchor']} integration", "automation_opportunities": ["AI Optimization (Technical)", "Sector-specific ML opportunity"]}}
             4. "gap_analysis": {{"resource_gaps": ["Technical skill gaps"], "infrastructure_gaps": ["Hardware/Node/Cloud gaps"]}}
             5. "strategic_recommendations": {{"process_redesign": "Technical workflow optimization", "tech_stack": ["Specific high-end tech 1", "Specific high-end tech 2"], "risk_mitigation": "Security/Governance strategy"}}
             6. "roadmap": {{"phase1": "Technical Audit/Win (Month 1-3)", "phase2": "Deployment (Month 4-8)", "phase3": "Optimization (Year 1+)"}}
