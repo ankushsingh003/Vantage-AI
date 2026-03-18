@@ -14,18 +14,26 @@ class GeminiClient:
     """
     
     def __init__(self):
-        # Explicitly load from the backend directory
-        env_path = os.path.join(os.path.dirname(__file__), "..", "..", ".env")
-        dotenv.load_dotenv(dotenv_path=env_path, override=True)
-        
-        # Initialize Groq (Primary)
+        # Load from multiple potential .env locations for maximum reliability
+        possible_envs = [
+            os.path.join(os.getcwd(), ".env"),
+            os.path.join(os.getcwd(), "backend", ".env"),
+            os.path.join(os.path.dirname(__file__), "..", "..", ".env"),
+            os.path.expanduser("~/.env")
+        ]
+        for env in possible_envs:
+            if os.path.exists(env):
+                dotenv.load_dotenv(env, override=True)
+                logger.info(f"Loaded environment from {env}")
+
+        # Initialize Groq (Primary) - prioritizing OS environment directly too
         self.groq_key = os.environ.get("GROQ_API_KEY") or os.environ.get("GROq_API_KEY")
         self.groq_client = None
         if self.groq_key:
             try:
                 self.groq_client = Groq(api_key=self.groq_key)
                 self.groq_model = "llama-3.3-70b-versatile"
-                logger.info("Groq initialized as primary LLM engine.")
+                logger.info(f"Groq engine verified (Key prefix: {self.groq_key[:4]}...)")
             except Exception as e:
                 logger.error(f"Failed to initialize Groq: {e}")
 
@@ -49,16 +57,25 @@ class GeminiClient:
         
         # 1. Try Groq (Primary)
         if self.groq_client:
-            try:
-                logger.info(f"Using Groq engine ({self.groq_model})...")
-                chat_completion = self.groq_client.chat.completions.create(
-                    messages=[{"role": "user", "content": prompt}],
-                    model=self.groq_model,
-                    max_tokens=max_tokens,
-                )
-                return chat_completion.choices[0].message.content
-            except Exception as e:
-                logger.warning(f"Groq primary engine failed: {e}. Attempting fallback...")
+            models_to_try = [self.groq_model, "llama-3.1-8b-instant", "llama3-70b-8192", "mixtral-8x7b-32768"]
+            for model_name in models_to_try:
+                try:
+                    logger.info(f"Using Groq engine ({model_name})...")
+                    chat_completion = self.groq_client.chat.completions.create(
+                        messages=[{"role": "user", "content": prompt}],
+                        model=model_name,
+                        max_tokens=max_tokens,
+                    )
+                    return chat_completion.choices[0].message.content
+                except Exception as e:
+                    if "429" in str(e):
+                        logger.warning(f"Groq {model_name} rate limited (429). Trying fallback model...")
+                        import asyncio
+                        await asyncio.sleep(0.5) # Tiny breather
+                        continue
+                    logger.warning(f"Groq engine ({model_name}) failed: {e}. Attempting next...")
+                    if model_name == models_to_try[-1]:
+                        break # All Groq models failed
 
         # 2. Try Gemini (Secondary)
         if self.gemini_model:

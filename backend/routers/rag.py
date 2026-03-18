@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
 import logging
+from backend.services.market_engine.kb_service import kb_service
 from backend.services.llm_engine.gemini_client import gemini_client
 
 router = APIRouter()
@@ -9,8 +10,8 @@ logger = logging.getLogger(__name__)
 
 class RAGQuery(BaseModel):
     query: str
-    industry: Optional[str] = "general"
-    context_window: Optional[int] = 5
+    industry: Optional[str] = "Restaurants"
+    context_window: Optional[int] = 3
 
 class RAGResponse(BaseModel):
     answer: str
@@ -21,42 +22,48 @@ class RAGResponse(BaseModel):
 async def query_intelligence(payload: RAGQuery):
     """
     Retrieval-Augmented Generation endpoint for deep market intelligence.
-    Uses Gemini 1.5 Flash to synthesize answers from latent market knowledge.
+    Uses ChromaDB for context and Gemini/Groq for synthesis.
     """
     logger.info(f"[RAG] Processing query: {payload.query} (Industry: {payload.industry})")
     
+    # 1. Retrieve Context from ChromaDB
+    try:
+        context_fragments = kb_service.retrieve_context(payload.industry, payload.query, n_results=payload.context_window)
+        context_text = "\n".join([f"- {f}" for f in context_fragments]) if context_fragments else "No specific sectoral data found in latent store."
+    except Exception as e:
+        logger.warning(f"[RAG] ChromaDB retrieval failed: {e}")
+        context_text = "Primary context retrieval unavailable."
+        context_fragments = []
+    
     prompt = f"""
-    Role: Senior Market Intelligence Strategist at BCG/McKinsey.
-    Context: You are performing a RAG-based deep dive into the '{payload.industry}' industry.
+    Role: Senior Market Intelligence Strategist.
+    Context from Market Intelligence Store ({payload.industry}):
+    {context_text}
     
-    Query: {payload.query}
+    User Query: {payload.query}
     
-    Task: Use your expansive market knowledge to provide an authoritative, data-driven answer.
+    Task: Use the provided context AND your expansive market knowledge to provide an authoritative, data-driven answer.
+    Cite numbers from the context (e.g., $3,215 volume) if available.
     
     FORMATTING RULES:
-    1. Use clear, high-level headers (###) for sections.
-    2. Use double-newlines between all paragraphs for breathable white space.
-    3. Use bullet points ( - ) for listing trends, risks, or companies.
-    4. Bold key terms or metrics for visual emphasis.
-    5. Ensure the response looks premium, strategic, and professional.
+    1. Use clear headers (###) for sections.
+    2. Use bullet points ( - ) for insights.
+    3. Bold key metrics.
     
     Structure:
-    - Executive Summary (Brief paragraph)
-    - Key Strategic Insights (Bulleted list)
-    - Deep Dive Analysis (1-2 structured paragraphs)
-    - Source Attribution (List specific simulated sources)
+    - Executive Summary
+    - Data-Grounded Insights
+    - Strategic Recommendations
     """
     
     try:
         response_text = await gemini_client.generate(prompt)
         
-        # Simplified parsing for the functional demo
-        # In a real RAG, we'd hit a vector DB first. Here we leverage Gemini's massive context.
         return RAGResponse(
             answer=response_text,
-            sources=["Simulated SEC Filings", "Market Intelligence Reports", "Industry News Wire"],
-            confidence=0.88
+            sources=[f"{payload.industry} Vector Store", "Square POS Analytics"],
+            confidence=0.92 if context_fragments else 0.70
         )
     except Exception as e:
         logger.error(f"[RAG] Error: {e}")
-        raise HTTPException(status_code=500, detail="Intelligence Engine failed to process query")
+        raise HTTPException(status_code=500, detail="Intelligence Engine failed")
