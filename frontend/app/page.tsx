@@ -58,7 +58,7 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-white dark:bg-[#020617] text-[#143D2C] dark:text-white overflow-hidden pb-16 pt-16">
+    <main className="min-h-screen bg-white dark:bg-[#020617] text-[#143D2C] dark:text-white overflow-hidden pb-16">
       
       {/* BCG Style Center-Aligned Hero Section */}
       <section className="max-w-[1440px] mx-auto px-6 lg:px-12 flex flex-col items-center text-center pt-6 lg:pt-10 pb-8 gap-8">

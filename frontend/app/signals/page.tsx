@@ -49,7 +49,7 @@ export default function MarketSignalsPage() {
   }, [industry]);
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 max-w-[1600px] mx-auto space-y-6 lg:space-y-8 min-h-screen">
+    <div className="px-4 sm:px-6 lg:px-8 pb-4 sm:pb-6 lg:pb-8 max-w-[1600px] mx-auto space-y-6 lg:space-y-8 min-h-screen">
       <header className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div>
           <div className="flex items-center gap-3 text-emerald-500 text-sm font-semibold uppercase tracking-wider mb-1">

@@ -68,7 +68,7 @@ export default function Navbar() {
         }}
         animate={hidden ? "hidden" : "visible"}
         transition={{ duration: 0.35, ease: "easeInOut" }}
-        className="fixed top-6 left-0 right-0 z-50 flex justify-center px-4 md:px-6"
+        className="fixed top-12 left-0 right-0 z-50 flex justify-center px-4 md:px-6"
       >
         <div className="max-w-7xl w-full flex justify-between items-center bg-white/80 dark:bg-[#143D2C]/90 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-2xl rounded-[32px] px-4 md:px-6 py-3 h-20 overflow-hidden">
           
@@ -158,7 +158,7 @@ export default function Navbar() {
             initial={{ opacity: 0, y: -20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            className="fixed top-28 left-4 right-4 z-40 bg-white/95 dark:bg-[#143D2C]/95 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-[32px] p-6 lg:hidden shadow-2xl"
+            className="fixed top-40 left-4 right-4 z-40 bg-white/95 dark:bg-[#143D2C]/95 backdrop-blur-2xl border border-slate-200 dark:border-white/10 rounded-[32px] p-6 lg:hidden shadow-2xl"
           >
             <div className="flex flex-col gap-3">
               {navItems.map((item) => {

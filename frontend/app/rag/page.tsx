@@ -99,7 +99,7 @@ export default function RAGPage() {
   }, [messages, isLoading]);
 
   return (
-    <div className="min-h-screen bg-slate-950 text-white flex pt-[--navbar-height]">
+    <div className="min-h-screen bg-slate-950 text-white flex">
       {/* Sidebar - Context & Sources */}
       <aside className="w-80 border-r border-slate-800/50 bg-slate-950/50 backdrop-blur-3xl p-6 flex flex-col gap-8">
         <div>
