@@ -24,7 +24,8 @@ export default function MarketSignalsPage() {
     "printing", "pharma", "tech", "cosmetics",
     "oil", "coal", "finance", "retail",
     "real_estate", "energy", "aviation", "logistics",
-    "agriculture", "media", "healthcare", "insurance"
+    "agriculture", "media", "healthcare", "insurance",
+    "restaurants"
   ];
 
   useEffect(() => {

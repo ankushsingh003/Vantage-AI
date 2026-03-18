@@ -10,16 +10,21 @@ const capabilities = [
   "Digital Transformation & Health Tech",
   "Regulatory Compliance & Risk Management",
   "Strategic Growth & Market Entry",
+  "Supply Chain & Inventory management",
+  "Kitchen Automation & Robotics",
+  "Customer Loyalty & digital ordering",
   "Financial Advisory"
 ];
 
 const industries = [
   "Medical",
-  "Automobiles"
+  "Automobiles",
+  "Restaurants"
 ];
 
 const subIndustryData: { [key: string]: string[] } = {
-  "Automobiles": ["Heavy Vehicles", "Light Vehicles", "Three Wheelers"]
+  "Automobiles": ["Heavy Vehicles", "Light Vehicles", "Three Wheelers"],
+  "Restaurants": ["Quick Service (QSR)", "Fine Dining", "Casual Dining", "Ghost Kitchens"]
 };
 
 export default function AssistanceSection() {
